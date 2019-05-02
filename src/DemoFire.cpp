@@ -3,7 +3,6 @@
 //
 
 #include "DemoFire.h"
-#include <ctime>
 
 void DemoFire::_initFire(const bool random_seed) {
     // Fill vector with defaults
