@@ -28,7 +28,6 @@ void drawFire(DemoFire &fire, sf::Image &img, sf::Texture &tex, sf::RectangleSha
     rect.setTexture(&tex);
 }
 
-
 int main() {
     sf::RenderWindow window(sf::VideoMode(WIDTH * SCALE, HEIGHT * SCALE), "DemoFire");
 
