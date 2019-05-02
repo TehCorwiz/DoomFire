@@ -4,7 +4,15 @@
 
 #include "DemoFire.h"
 
+void DemoFire::_initRng() {
+    this->_rnd_gen = std::minstd_rand(std::random_device{}());
+    this->_rnd_dist = std::uniform_real_distribution<double>(0.0, 1.0);
+}
+
+
 void DemoFire::_initFire(const bool random_seed) {
+    this->_fireCells = std::vector<size_t>(this->_fireSize);
+
     // Fill vector with defaults
     for (int y = 0; y < this->_height; y++) {
         for (int x = 0; x < this->_width; x++) {
@@ -25,10 +33,8 @@ DemoFire::DemoFire(const size_t w, const size_t h, const bool random_seed = fals
     this->_height = h;
     this->_fireSize = w * h;
 
-    this->_rnd_gen = std::minstd_rand(std::random_device{}());
-    this->_rnd_dist = std::uniform_real_distribution<double>(0.0, 1.0);
+    this->_initRng();
 
-    this->_fireCells = std::vector<size_t>(this->_fireSize);
     this->_initFire(random_seed);
 }
 
@@ -119,3 +125,12 @@ void DemoFire::drawCheck() {
         }
     }
 }
+
+void DemoFire::resize(size_t w, size_t h) {
+    this->_width = w;
+    this->_height = h;
+    this->_fireSize = w * h;
+
+    this->_initFire(false);
+}
+

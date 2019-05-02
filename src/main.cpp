@@ -14,6 +14,10 @@ const static uint TARGET_TICK_RATE = 28;
 const static uint SECOND_NS = 1000000;
 const static uint TICK_NS = SECOND_NS / TARGET_TICK_RATE;
 
+DemoFire demo_fire(WIDTH, HEIGHT, false);
+sf::Image fire_image;
+sf::Texture fire_texture;
+sf::RectangleShape screen_rect;
 
 void handle_window_events(sf::RenderWindow &window) {
     while (window.pollEvent(event)) {
@@ -28,24 +32,22 @@ void drawFire(DemoFire &fire, sf::Image &img, sf::Texture &tex, sf::RectangleSha
     rect.setTexture(&tex);
 }
 
+void init_drawing(size_t w, size_t h) {
+    demo_fire.resize(w, h);
+
+    fire_image.create(w, h);
+
+    fire_texture.create(w, h);
+
+    screen_rect.setSize(sf::Vector2f(w * SCALE, h * SCALE));
+    screen_rect.setScale(1, 1);
+    screen_rect.setPosition(0, 0);
+}
+
 int main() {
     sf::RenderWindow window(sf::VideoMode(WIDTH * SCALE, HEIGHT * SCALE), "DemoFire");
 
-    DemoFire fire(WIDTH, HEIGHT, false);
-
-    sf::Image fire_image;
-    fire_image.create(WIDTH, HEIGHT);
-
-    sf::Texture fire_texture;
-    fire_texture.create(WIDTH, HEIGHT);
-
-    sf::RectangleShape screen_rect;
-    {
-        screen_rect.setSize(sf::Vector2f(WIDTH * SCALE, HEIGHT * SCALE));
-        screen_rect.setPosition(0, -2); // Why is there a border on top + left without this?
-    }
-
-//    fire.drawCheck();
+    init_drawing(WIDTH, HEIGHT);
 
     clock_t last_tick_at = clock(); // In nanoseconds
 
@@ -55,8 +57,8 @@ int main() {
         const clock_t tick_time = clock() - last_tick_at; // In nanoseconds
 
         if (tick_time >= TICK_NS) {
-            fire.doFire();
-            drawFire(fire, fire_image, fire_texture, screen_rect);
+            demo_fire.doFire();
+            drawFire(demo_fire, fire_image, fire_texture, screen_rect);
             last_tick_at = clock();
 
             window.clear();

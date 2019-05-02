@@ -65,6 +65,9 @@ public:
     void spreadFire(size_t);
 
     void drawCheck();
+
+    void resize(size_t, size_t);
+
 private:
     size_t _width;
     size_t _height;
@@ -74,6 +77,8 @@ private:
 
     std::minstd_rand _rnd_gen;
     std::uniform_real_distribution<double> _rnd_dist;
+
+    void _initRng();
 
     void _initFire(bool);
 
