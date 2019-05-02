@@ -59,11 +59,11 @@ int main() {
             fire.doFire();
             drawFire(fire, fire_image, fire_texture, screen_rect);
             last_tick_at = clock();
-        }
 
-        window.clear();
-        window.draw(screen_rect);
-        window.display();
+            window.clear();
+            window.draw(screen_rect);
+            window.display();
+        }
     }
 
     return 0;
