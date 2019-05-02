@@ -43,8 +43,7 @@ sf::Image DemoFire::getImage() {
     sf::Image img;
     img.create(this->_width, this->_height);
 
-    // sf::Image coordinate system is flipped from our vector's, so we iterate backwards in the y direction.
-    for (int y = this->_height - 1; y > 0; --y) {
+    for (int y = 0; y < this->_height; y++) {
         for (int x = 0; x < this->_width; x++) {
             size_t palette_idx = this->_fireCells[y * this->_width + x];
             sf::Color pixel_color = fire_palette[palette_idx];
@@ -56,8 +55,7 @@ sf::Image DemoFire::getImage() {
 }
 
 void DemoFire::getImage(sf::Image &img) {
-    // sf::Image coordinate system is flipped from our vector's, so we iterate backwards in the y direction.
-    for (int y = this->_height - 1; y > 0; --y) {
+    for (int y = 0; y < this->_height; y++) {
         for (int x = 0; x < this->_width; x++) {
             size_t palette_idx = this->_fireCells[y * this->_width + x];
             sf::Color pixel_color = fire_palette[palette_idx];
