@@ -3,6 +3,6 @@ project(demofire)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(demofire src/main.cpp src/DemoFire.cpp src/DemoFire.h)
+add_executable(demofire src/main.cpp src/DemoFire.cpp src/DemoFire.h src/main.h)
 
 target_link_libraries(demofire sfml-graphics sfml-window sfml-system)

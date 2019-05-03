@@ -11,6 +11,12 @@
 #include <functional>
 
 class DemoFire {
+public:
+    // Here we define our palette. This is cribbed from the source material listed in the readme.
+    // Our height is
+    //
+    // I have plans to replace with a multi-color gradient palette generator which can generate this or any other
+    // color palette of an arbitrary length. This would allow using arbitrary resolutions down the road.
     const static size_t PALETTE_SIZE = 38;
     const sf::Color fire_palette[PALETTE_SIZE] = {
             sf::Color(0x07, 0x07, 0x07),
@@ -53,7 +59,6 @@ class DemoFire {
             sf::Color(0xFF, 0xFF, 0xFF),
     };
 
-public:
     DemoFire(size_t, size_t, bool);
 
     sf::Image getImage();

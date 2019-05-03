@@ -3,35 +3,7 @@
 #include <cmath>
 #include <cstdio>
 
-#include "DemoFire.h"
-
-/* Global variables */
-sf::Event event; // used to hold data about triggered events. SFML example code had this as a global.
-
-/* Simulation controls */
-// HEIGHT: The value was chosen due to how the original algo works. PALETTE_SIZE (defined in DemoFire.h) affects how high
-// the flames are drawn. Thus we need a value that isn't too short or too tall. This value was chosen by Fabien, but
-// I've verified it's quality independently.
-const static size_t HEIGHT = 168;
-// WIDTH: The value uses the above to choose a width that results in a 16:9 ratio which is the current most common
-// screen size.
-const static size_t WIDTH = (size_t) floor(HEIGHT * (16.0 / 9.0));
-// SCALE: This value set the default scale of the window. Since HEIGHT is externally dependent it's easier to draw at
-// the above HEIGHT * WIDTH resolution and just scale up the entire texture.
-const static size_t SCALE = 4;
-
-// TARGET_TICK_RATE: This is our target FPS (more or less) down the road I may split ticks from frames and run the sim
-// at either a higher or lower tick rate, but keep FPS locked to some common value, 30 or 60).
-const static uint TARGET_TICK_RATE = 28;
-// SECOND_NS: The number of nanoseconds in a second.
-const static uint SECOND_NS = 1000000;
-// TICK_NS: The number of nanoseconds per tick for our chosen rate.
-const static uint TICK_NS = SECOND_NS / TARGET_TICK_RATE;
-
-DemoFire demo_fire(WIDTH, HEIGHT, false); // Construct DemoFire object to run the sim.
-sf::Image fire_image; // Construct Image to write pixels onto.
-sf::Texture fire_texture; // Constructs Texture onto which we can draw our Image.
-sf::RectangleShape screen_rect; // Constructs a rectangle which takes our texture and can be draw to our window.
+#include "main.h"
 
 // Handles window events. SFML handles events internally, and asynchronously. Events will accumulate until pollEvent is
 // called which will load the next event into our `event` object which we can use to handle events such as resizing the
