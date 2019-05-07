@@ -2,23 +2,22 @@
 // Created by corwin on 5/1/19.
 //
 
-#ifndef DEMOFIRE_DEMOFIRE_H
-#define DEMOFIRE_DEMOFIRE_H
+#ifndef DEMOFIRE_DOOMFIRE_H
+#define DEMOFIRE_DOOMFIRE_H
 
 
 #include <SFML/Graphics/Image.hpp>
 #include <random>
 #include <functional>
 
-class DemoFire {
+class DoomFire {
 public:
     // Here we define our palette. This is cribbed from the source material listed in the readme.
-    // Our height is
     //
     // I have plans to replace with a multi-color gradient palette generator which can generate this or any other
     // color palette of an arbitrary length. This would allow using arbitrary resolutions down the road.
-    const static size_t PALETTE_SIZE = 38;
-    const sf::Color fire_palette[PALETTE_SIZE] = {
+    const static size_t CLASSIC_PALETTE_SIZE = 38;
+    const sf::Color CLASSIC_PALETTE[CLASSIC_PALETTE_SIZE] = {
             sf::Color(0x07, 0x07, 0x07),
             sf::Color(0x1F, 0x07, 0x07),
             sf::Color(0x2F, 0x0F, 0x07),
@@ -59,7 +58,8 @@ public:
             sf::Color(0xFF, 0xFF, 0xFF),
     };
 
-    DemoFire(size_t, size_t, bool);
+    DoomFire(const size_t w, const size_t h, const bool random_seed = false,
+             const size_t palette_size = DoomFire::CLASSIC_PALETTE_SIZE);
 
     sf::Image getImage();
 
@@ -77,6 +77,7 @@ private:
     size_t _width;
     size_t _height;
     size_t _fireSize;
+    size_t _paletteSize;
 
     std::vector<size_t> _fireCells;
 
@@ -91,7 +92,8 @@ private:
 
     size_t _rndColor();
 
+    sf::Color _getDynamicColor(size_t);
 };
 
 
-#endif //DEMOFIRE_DEMOFIRE_H
+#endif //DEMOFIRE_DOOMFIRE_H

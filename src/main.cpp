@@ -16,7 +16,7 @@ void handle_window_events(sf::RenderWindow &window) {
 }
 
 // Takes the simulation, retrieves the image data and feeds it through our Image->Texture->RectangleShape pipeline.
-void drawFire(DemoFire &fire, sf::Image &img, sf::Texture &tex, sf::RectangleShape &rect) {
+void drawFire(DoomFire &fire, sf::Image &img, sf::Texture &tex, sf::RectangleShape &rect) {
     fire.getImage(img); // Writes the pixel data directly to the img.
     tex.loadFromImage(img); // Loads image into tex.
     rect.setTexture(&tex); // Applies that texture to the rect.
@@ -32,7 +32,8 @@ void init_drawing(size_t w, size_t h) {
     fire_texture.create(w, h);
 
     // screen_rect exists and has been initialized but needs to have its attributes set.
-    screen_rect.setSize(sf::Vector2f(w * SCALE, h * SCALE));
+//    screen_rect.setSize(sf::Vector2f(w * SCALE, h * SCALE));
+    screen_rect.setSize(sf::Vector2f(w, h));
     screen_rect.setScale(1, 1);
     screen_rect.setPosition(0, 0);
 }
@@ -40,7 +41,7 @@ void init_drawing(size_t w, size_t h) {
 // Our entry point
 int main() {
     // Creates our actual window with our scaled dimensions and a window title.
-    sf::RenderWindow window(sf::VideoMode(WIDTH * SCALE, HEIGHT * SCALE), "DemoFire");
+    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "DemoEffects");
 
     init_drawing(WIDTH, HEIGHT); // Initializes our drawing surfances and simulation
 
