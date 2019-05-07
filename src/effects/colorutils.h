@@ -3,8 +3,8 @@
 // Cribbed shamelessly from:
 // https://stackoverflow.com/questions/3018313/algorithm-to-convert-rgb-to-hsv-and-hsv-to-rgb-in-range-0-255-for-both
 
-#ifndef DEMOFIRE_HSVCONV_H
-#define DEMOFIRE_HSVCONV_H
+#ifndef DEMOFIRE_COLORUTILS_H
+#define DEMOFIRE_COLORUTILS_H
 
 #include <SFML/Graphics/Color.hpp>
 #include <cmath>
@@ -131,7 +131,15 @@ static sf::Color _lerpColorRgb(sf::Color c0, sf::Color c1, const double t) {
 //            c0.b + (c1.b - c0.b) * t,
 //            c0.g + (c1.g - c0.g) * t
 //    );
+// Also cool
+//    return sf::Color(
+//            c0.r * t + c1.r,
+//            c0.b * t + c1.b,
+//            c0.g * t + c1.g
+//    );
+
+
 }
 
 
-#endif //DEMOFIRE_HSVCONV_H
+#endif //DEMOFIRE_COLORUTILS_H
