@@ -186,5 +186,6 @@ sf::Color DoomFire::_getDynamicColor(const size_t palette_idx) {
     if (fabs(scaled_fraction) <= 0.00000000001)
         scaled_fraction = 0;
 
-    return _lerpColorRgb(CLASSIC_PALETTE[scaled_idx], CLASSIC_PALETTE[scaled_idx + 1], scaled_fraction);
+    return _lerpColorHsv(CLASSIC_PALETTE[scaled_idx], CLASSIC_PALETTE[scaled_idx + 1], scaled_fraction);
+//    return _lerpColorRgb(CLASSIC_PALETTE[scaled_idx], CLASSIC_PALETTE[scaled_idx + 1], scaled_fraction);
 }
