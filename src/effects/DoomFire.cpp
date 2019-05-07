@@ -169,13 +169,15 @@ void DoomFire::resize(size_t w, size_t h) {
 
 // Performs a lerp on the CLASSIC_PALETTE to give us dynamic color values at a somewhat arbitrary resolution.
 sf::Color DoomFire::_getDynamicColor(const size_t palette_idx) {
+    // If we're using the default palette then we can just look the value.
+    if (this->_paletteSize == CLASSIC_PALETTE_SIZE)
+        return CLASSIC_PALETTE[palette_idx];
+
     // Abort if we're on the edge or outside the bounds of our palette
     if (palette_idx >= this->_paletteSize - 1)
         return CLASSIC_PALETTE[CLASSIC_PALETTE_SIZE - 1];
     else if (palette_idx < 0)
         return CLASSIC_PALETTE[0];
-    else if (this->_paletteSize == CLASSIC_PALETTE_SIZE)
-        return CLASSIC_PALETTE[palette_idx];
 
     // First convert actual index into an index relative to our classic palette
     double intermediate_scale = (((double) palette_idx / (double) this->_paletteSize) *
