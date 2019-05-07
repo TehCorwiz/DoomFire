@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 #include "DoomFire.h"
-#include "hsvconv.h"
+#include "colorutils.h"
 
 // Initializes the random number generator.
 void DoomFire::_initRng() {
