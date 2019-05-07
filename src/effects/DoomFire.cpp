@@ -174,6 +174,8 @@ sf::Color DoomFire::_getDynamicColor(const size_t palette_idx) {
         return CLASSIC_PALETTE[CLASSIC_PALETTE_SIZE - 1];
     else if (palette_idx < 0)
         return CLASSIC_PALETTE[0];
+    else if (this->_paletteSize == CLASSIC_PALETTE_SIZE)
+        return CLASSIC_PALETTE[palette_idx];
 
     // First convert actual index into an index relative to our classic palette
     double intermediate_scale = (((double) palette_idx / (double) this->_paletteSize) *
