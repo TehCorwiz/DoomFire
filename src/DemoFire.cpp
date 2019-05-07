@@ -114,7 +114,7 @@ void DemoFire::spreadFire(size_t src_idx) {
         size_t rnd_idx = (size_t) floor(this->_rnd() * 3.0) & (uint) 3;
         // We then use this random index to offset our destination value. We add 1 here to avoid negative indices.
         size_t dst = src_idx - rnd_idx + 1;
-        // We move down one row
+        // We move up one row
         size_t dst_idx = dst - this->_width;
         // Finally we set the pixel value to either 1 less than the current color, or the current color.
         this->_fireCells[dst_idx] = pixel - (rnd_idx & (size_t) 1);
