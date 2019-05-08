@@ -155,7 +155,7 @@ void DoomFire::resize(size_t w, size_t h) {
     _height = h;
     _fireSize = w * h;
 
-    _initFire(false);
+    _initFire();
 }
 
 // Performs a lerp on the CLASSIC_PALETTE to give us dynamic color values at a somewhat arbitrary resolution.
