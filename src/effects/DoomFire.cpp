@@ -33,8 +33,8 @@ void DoomFire::_initFire() {
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
             if (y == _height - 1) // Bottom row is white (max palette index).
-                    // "Hottest" color, in our case white.
-                    _fireCells[y * _width + x] = _paletteSize - 1;
+                // "Hottest" color, in our case white.
+                _fireCells[y * _width + x] = _paletteSize - 1;
 
             else // Rest of cells are black (palette index 0).
                 _fireCells[y * _width + x] = 0;
@@ -63,9 +63,9 @@ sf::Image DoomFire::getImage() {
         for (int x = 0; x < _width; x++) {
             size_t palette_idx = _fireCells[y * _width + x];
 
-            sf::Color *pixel_color = _getDynamicColor(palette_idx);
+            sf::Color pixel_color = _getDynamicColor(palette_idx);
 
-            img.setPixel(x, y, *pixel_color);
+            img.setPixel(x, y, pixel_color);
         }
     }
 
@@ -78,9 +78,9 @@ void DoomFire::getImage(sf::Image &img) {
         for (int x = 0; x < _width; x++) {
             size_t palette_idx = _fireCells[y * _width + x];
 
-            sf::Color *pixel_color = _getDynamicColor(palette_idx);
+            sf::Color pixel_color = _getDynamicColor(palette_idx);
 
-            img.setPixel(x, y, *pixel_color);
+            img.setPixel(x, y, pixel_color);
         }
     }
 }
@@ -159,16 +159,16 @@ void DoomFire::resize(size_t w, size_t h) {
 }
 
 // Performs a lerp on the CLASSIC_PALETTE to give us dynamic color values at a somewhat arbitrary resolution.
-sf::Color *DoomFire::_getDynamicColor(const size_t palette_idx) {
+sf::Color DoomFire::_getDynamicColor(const size_t palette_idx) {
     // If we're using the default palette then we can just look the value.
     if (_paletteSize == CLASSIC_PALETTE_SIZE)
-        return &CLASSIC_PALETTE[palette_idx];
+        return CLASSIC_PALETTE[palette_idx];
 
     // Abort if we're on the edge or outside the bounds of our palette
     if (palette_idx >= _paletteSize - 1)
-        return &CLASSIC_PALETTE[CLASSIC_PALETTE_SIZE - 1];
+        return CLASSIC_PALETTE[CLASSIC_PALETTE_SIZE - 1];
     else if (palette_idx < 0)
-        return &CLASSIC_PALETTE[0];
+        return CLASSIC_PALETTE[0];
 
     // First convert actual index into an index relative to our classic palette
     double intermediate_scale = (((double) palette_idx / (double) _paletteSize) *
@@ -183,5 +183,5 @@ sf::Color *DoomFire::_getDynamicColor(const size_t palette_idx) {
     if (fabs(scaled_fraction) <= 0.00001)
         scaled_fraction = 0;
 
-    return lerpColorRgb(&CLASSIC_PALETTE[scaled_idx], &CLASSIC_PALETTE[scaled_idx + 1], scaled_fraction);
+    return lerpColorRgb(CLASSIC_PALETTE[scaled_idx], CLASSIC_PALETTE[scaled_idx + 1], scaled_fraction);
 }

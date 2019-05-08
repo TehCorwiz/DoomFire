@@ -89,7 +89,7 @@ private:
 
     double _rnd();
 
-    sf::Color *_getDynamicColor(size_t);
+    sf::Color _getDynamicColor(size_t);
 };
 
 
