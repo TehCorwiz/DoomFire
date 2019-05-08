@@ -1,4 +1,4 @@
-# DemoFire
+# DoomFire
 
 ## Purpose
 

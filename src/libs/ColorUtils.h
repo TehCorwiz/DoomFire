@@ -2,8 +2,8 @@
 // Created by corwin on 5/7/19.
 //
 
-#ifndef DEMOFIRE_COLORUTILS_H
-#define DEMOFIRE_COLORUTILS_H
+#ifndef DOOMFIRE_COLORUTILS_H
+#define DOOMFIRE_COLORUTILS_H
 
 #include <SFML/Graphics/Color.hpp>
 #include <cmath>
@@ -178,4 +178,4 @@ static sf::Color lerpColorRgb(sf::Color c0, sf::Color c1, const double t,
     return out;
 }
 
-#endif //DEMOFIRE_COLORUTILS_H
+#endif //DOOMFIRE_COLORUTILS_H

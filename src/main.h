@@ -2,8 +2,8 @@
 // Created by corwin on 5/3/19.
 //
 
-#ifndef DEMOFIRE_MAIN_H
-#define DEMOFIRE_MAIN_H
+#ifndef DOOMFIRE_MAIN_H
+#define DOOMFIRE_MAIN_H
 
 #include <cmath>
 #include <cstdio>
@@ -46,4 +46,4 @@ sf::RectangleShape screen_rect; // Constructs a rectangle which takes our textur
 
 DoomFire demo_fire(WIDTH, HEIGHT, PALETTE_SIZE); // Custom virtual palette size
 
-#endif //DEMOFIRE_MAIN_H
+#endif //DOOMFIRE_MAIN_H

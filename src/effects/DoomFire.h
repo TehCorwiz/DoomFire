@@ -2,8 +2,8 @@
 // Created by corwin on 5/1/19.
 //
 
-#ifndef DEMOFIRE_DOOMFIRE_H
-#define DEMOFIRE_DOOMFIRE_H
+#ifndef DOOMFIRE_DOOMFIRE_H
+#define DOOMFIRE_DOOMFIRE_H
 
 
 #include <SFML/Graphics/Image.hpp>
@@ -93,4 +93,4 @@ private:
 };
 
 
-#endif //DEMOFIRE_DOOMFIRE_H
+#endif //DOOMFIRE_DOOMFIRE_H
