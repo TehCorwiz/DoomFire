@@ -17,7 +17,7 @@ public:
     // I have plans to replace with a multi-color gradient palette generator which can generate this or any other
     // color palette of an arbitrary length. This would allow using arbitrary resolutions down the road.
     const static size_t CLASSIC_PALETTE_SIZE = 38;
-    const sf::Color CLASSIC_PALETTE[CLASSIC_PALETTE_SIZE] = {
+    sf::Color CLASSIC_PALETTE[CLASSIC_PALETTE_SIZE] = {
             sf::Color(0x07, 0x07, 0x07),
             sf::Color(0x1F, 0x07, 0x07),
             sf::Color(0x2F, 0x0F, 0x07),
@@ -58,8 +58,7 @@ public:
             sf::Color(0xFF, 0xFF, 0xFF),
     };
 
-    DoomFire(const size_t w, const size_t h, const bool random_seed = false,
-             const size_t palette_size = DoomFire::CLASSIC_PALETTE_SIZE);
+    DoomFire(size_t w, size_t h, size_t palette_size = DoomFire::CLASSIC_PALETTE_SIZE);
 
     sf::Image getImage();
 
@@ -86,13 +85,11 @@ private:
 
     void _initRng();
 
-    void _initFire(bool);
+    void _initFire();
 
     double _rnd();
 
-    size_t _rndColor();
-
-    sf::Color _getDynamicColor(size_t);
+    sf::Color *_getDynamicColor(size_t);
 };
 
 

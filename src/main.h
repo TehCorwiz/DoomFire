@@ -21,26 +21,29 @@ const static size_t SCALE = 4;
 // dependent on the CLASSIC_PALETTE_SIZE in the first place, I'm adopting a calculated calue in order to support additional
 // resolutions down the road.
 constexpr static size_t HEIGHT = SCALE * DoomFire::CLASSIC_PALETTE_SIZE;
+
 // WIDTH: The value uses the above to choose a width that results in a 16:9 ratio which is the current most common
 // screen size.
 const static size_t WIDTH = floor(HEIGHT * (16.0 / 9.0));
-//const static size_t WIDTH = 20;
 
 // TARGET_TICK_RATE: This is our target FPS (more or less) down the road I may split ticks from frames and run the sim
 // at either a higher or lower tick rate, but keep FPS locked to some common value, 30 or 60).
-const static uint TARGET_TICK_RATE = 60;
+const static uint TARGET_TICK_RATE = 28;
+
 // SECOND_NS: The number of nanoseconds in a second.
 const static uint SECOND_NS = 1000000;
+
 // TICK_NS: The number of nanoseconds per tick for our chosen rate.
-const static uint TICK_NS = SECOND_NS / TARGET_TICK_RATE;
+constexpr static uint TICK_NS = SECOND_NS / TARGET_TICK_RATE;
 
 
 /* Work objects */
 sf::Event event; // used to hold data about triggered events. SFML example code had this as a global.
 
-DoomFire demo_fire(WIDTH, HEIGHT); // Construct DoomFire object to run the sim.
 sf::Image fire_image; // Construct Image to write pixels onto.
 sf::Texture fire_texture; // Constructs Texture onto which we can draw our Image.
 sf::RectangleShape screen_rect; // Constructs a rectangle which takes our texture and can be draw to our window.
+
+DoomFire demo_fire(WIDTH, HEIGHT, HEIGHT / 4); // Custom virtual palette size
 
 #endif //DEMOFIRE_MAIN_H
