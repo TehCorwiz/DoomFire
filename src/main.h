@@ -13,7 +13,7 @@
 
 // SCALE: This value set the default scale of the window. Since HEIGHT is externally dependent it's easier to draw at
 // the above HEIGHT * WIDTH resolution and just scale up the entire texture. (Default is 4)
-const static size_t SCALE = 1;
+const static size_t SCALE = 3;
 
 // HEIGHT: The value was chosen due to how the original algo works. CLASSIC_PALETTE_SIZE (defined in DoomFire.h) affects how
 // high the flames are drawn. Thus we need a value that isn't too short or too tall. The original value, 168 looks
