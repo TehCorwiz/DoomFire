@@ -143,8 +143,8 @@ static sf::Color lerpColorHsv(sf::Color c0, sf::Color c1, const double t,
 
     auto out = HsvColor{
             f_pointer(a.h, b.h, t),
-            f_pointer(a.h, b.h, t),
-            f_pointer(a.h, b.h, t)
+            f_pointer(a.s, b.s, t),
+            f_pointer(a.v, b.v, t)
     };
 
     return hsv2rgb(out);
