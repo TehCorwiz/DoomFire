@@ -41,7 +41,7 @@ void init_drawing(size_t w, size_t h) {
 // Our entry point
 int main() {
     // Creates our actual window with our scaled dimensions and a window title.
-    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "DemoEffects");
+    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "DoomFire");
 
     init_drawing(WIDTH, HEIGHT); // Initializes our drawing surfances and simulation
 
