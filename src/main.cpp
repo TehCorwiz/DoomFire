@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
     args::CompletionFlag completion(parser, {"complete"});
 
     // Rendering options
-    args::ValueFlag<size_t> height(parser, "height", "height of fire simulation in pixels", {'h', "height"},
+    args::ValueFlag<size_t> height(parser, "height", "height of fire simulation in pixels", {'g', "height"},
                                    DEFAULT_HEIGHT);
     args::ValueFlag<size_t> width(parser, "width", "Width of fire simulation in pixels", {'w', "width"},
                                   DEFAULT_WIDTH);
