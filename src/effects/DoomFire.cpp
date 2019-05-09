@@ -128,7 +128,7 @@ void DoomFire::spreadFire(size_t src_idx) {
 // This was used earlier in development for testing various things.
 void DoomFire::drawCheck() {
     bool is_color_pixel = false;
-    const int color_index = 0;
+    int color_index = 0;
 
     for (int y = 0; y < (_height - 1); y++) {
         for (int x = 0; x < _width; x++) {
