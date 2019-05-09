@@ -9,6 +9,7 @@
 #include <SFML/Graphics/Image.hpp>
 #include <random>
 #include <functional>
+#include "../libs/ColorUtils.h"
 
 class DoomFire {
 public:
@@ -58,7 +59,9 @@ public:
             sf::Color(0xFF, 0xFF, 0xFF),
     };
 
-    DoomFire(size_t w, size_t h, size_t palette_size = DoomFire::CLASSIC_PALETTE_SIZE);
+    DoomFire(size_t w, size_t h, size_t = DoomFire::CLASSIC_PALETTE_SIZE,
+             ColorSpace::ColorSpace = ColorSpace::RGB,
+             InterpolationFunction::InterpolationFunction = InterpolationFunction::Linear);
 
     sf::Image getImage();
 
@@ -75,8 +78,10 @@ public:
 private:
     size_t _width;
     size_t _height;
-    size_t _fireSize;
+    size_t _fire_size;
     size_t _paletteSize;
+    ColorSpace::ColorSpace _colorspace;
+    InterpolationFunction::InterpolationFunction _interpolation_function;
 
     std::vector<size_t> _fireCells;
 

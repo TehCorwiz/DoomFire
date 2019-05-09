@@ -20,13 +20,13 @@ double DoomFire::_rnd() {
 
 // Initializes our fire.
 // At its core our fire generator is basically cellular automata. So we keep those cells in a vector of size
-// WIDTH * HEIGHT. While we could use multidimensional arrays or a 2d vector the original algorithm uses some old-school
-// pointer math to propagate the flames, so in this implementation we're using a 1d vector of length WIDTH * HEIGHT.
+// DEFAULT_WIDTH * DEFAULT_HEIGHT. While we could use multidimensional arrays or a 2d vector the original algorithm uses some old-school
+// pointer math to propagate the flames, so in this implementation we're using a 1d vector of length DEFAULT_WIDTH * DEFAULT_HEIGHT.
 // This method accepts a boolean to determine if we should use a single white line of pixels as our source, or if we
 // should use randomly colored pixels as our source. From there it iterates over the vector and pre-fills it with our
 // starting colors.
 void DoomFire::_initFire() {
-    _fireCells = std::vector<size_t>(_fireSize);
+    _fireCells = std::vector<size_t>(_fire_size);
     size_t r_p_idx;
 
     // Fill vector with defaults
@@ -43,11 +43,14 @@ void DoomFire::_initFire() {
 }
 
 // Our constructor. Stores our parameters and bootstraps our rng and cells.
-DoomFire::DoomFire(const size_t w, const size_t h, const size_t palette_size) {
+DoomFire::DoomFire(const size_t w, const size_t h, const size_t palette_size, const ColorSpace::ColorSpace colorspace,
+                   const InterpolationFunction::InterpolationFunction interpolation_function) {
     _width = w;
     _height = h;
-    _fireSize = w * h;
+    _fire_size = w * h;
     _paletteSize = palette_size;
+    _colorspace = colorspace;
+    _interpolation_function = interpolation_function;
 
     _initRng();
 
@@ -153,7 +156,7 @@ void DoomFire::drawCheck() {
 void DoomFire::resize(size_t w, size_t h) {
     _width = w;
     _height = h;
-    _fireSize = w * h;
+    _fire_size = w * h;
 
     _initFire();
 }
@@ -183,5 +186,13 @@ sf::Color DoomFire::_getDynamicColor(const size_t palette_idx) {
     if (fabs(scaled_fraction) <= 0.00001)
         scaled_fraction = 0;
 
-    return lerpColorRgb(CLASSIC_PALETTE[scaled_idx], CLASSIC_PALETTE[scaled_idx + 1], scaled_fraction);
+    switch (_colorspace) {
+        case ColorSpace::HSV:
+            return ColorUtils::lerpColorHsv(CLASSIC_PALETTE[scaled_idx], CLASSIC_PALETTE[scaled_idx + 1], scaled_fraction,
+                                _interpolation_function);
+        default:
+        case ColorSpace::RGB:
+            return ColorUtils::lerpColorRgb(CLASSIC_PALETTE[scaled_idx], CLASSIC_PALETTE[scaled_idx + 1], scaled_fraction,
+                                _interpolation_function);
+    }
 }
