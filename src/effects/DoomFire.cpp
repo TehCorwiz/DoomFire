@@ -79,9 +79,8 @@ sf::Image DoomFire::getImage() {
 void DoomFire::getImage(sf::Image &img) {
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
-            size_t palette_idx = _fireCells[y * _width + x];
-
-            sf::Color pixel_color = _getDynamicColor(palette_idx);
+            const size_t palette_idx = _fireCells[y * _width + x];
+            const sf::Color pixel_color = _getDynamicColor(palette_idx);
 
             img.setPixel(x, y, pixel_color);
         }
@@ -102,7 +101,7 @@ void DoomFire::doFire() {
 // This is where the flames happen! This logic is mostly cribbed directly from the source material.
 void DoomFire::spreadFire(size_t src_idx) {
     // src_idx: this is the location of the current cell in _fireCells
-    size_t palette_idx = _fireCells[src_idx]; // palette_idx: the actual color value of the src palette_idx.
+    const size_t palette_idx = _fireCells[src_idx]; // palette_idx: the actual color value of the src palette_idx.
 
     if (palette_idx == 0) { // Black
         // If our palette_idx is already black then we propagate the value down one row.
@@ -115,11 +114,11 @@ void DoomFire::spreadFire(size_t src_idx) {
         // 2) We multiply that by 3 to get a number between 0.0 and 3.0 inclusive.
         // 3) We floor that value to get an integer.
         // 4) We logically AND that value with 3 which clamps our value.
-        size_t rnd_idx = (size_t) floor(_rnd() * 3.0) & (uint) 3;
+        const size_t rnd_idx = (size_t) floor(_rnd() * 3.0) & (uint) 3;
         // We then use this random index to offset our destination value. We add 1 here to avoid negative indices.
-        size_t dst = src_idx - rnd_idx + 1;
+        const size_t dst = src_idx - rnd_idx + 1;
         // We move up one row
-        size_t dst_idx = dst - _width;
+        const size_t dst_idx = dst - _width;
         // Finally we set the palette_idx value to either 1 less than the current color, or the current color.
         _fireCells[dst_idx] = palette_idx - (rnd_idx & (size_t) 1);
     }
@@ -129,7 +128,7 @@ void DoomFire::spreadFire(size_t src_idx) {
 // This was used earlier in development for testing various things.
 void DoomFire::drawCheck() {
     bool is_color_pixel = false;
-    int color_index = 0;
+    const int color_index = 0;
 
     for (int y = 0; y < (_height - 1); y++) {
         for (int x = 0; x < _width; x++) {
@@ -177,7 +176,7 @@ sf::Color DoomFire::_getDynamicColor(const size_t palette_idx) {
     double intermediate_scale = (((double) palette_idx / (double) _paletteSize) *
                                  ((double) CLASSIC_PALETTE_SIZE));
     // This is our actual size_t index.
-    size_t scaled_idx = floor(intermediate_scale);
+    const size_t scaled_idx = floor(intermediate_scale);
 
     // We need to  extract this fractional component to feed into our lerp method.
     double scaled_fraction = intermediate_scale - scaled_idx;

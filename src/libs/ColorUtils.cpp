@@ -36,7 +36,7 @@ HsvColor ColorUtils::rgb2hsv(const sf::Color rgb) {
     return hsv;
 }
 
-sf::Color ColorUtils::hsv2rgb(HsvColor hsv) {
+sf::Color ColorUtils::hsv2rgb(const HsvColor hsv) {
     sf::Color rgb;
     unsigned char region, remainder, p, q, t;
 
@@ -90,11 +90,11 @@ sf::Color ColorUtils::hsv2rgb(HsvColor hsv) {
     return rgb;
 }
 
-size_t interpolateLinear(double v1, double v2, double mu) {
+size_t interpolateLinear(const double v1, const double v2, const double mu) {
     return ceil(v1 * (1 - mu) + v2 * mu);
 }
 
-size_t interpolateCosine(double y1, double y2, double mu) {
+size_t interpolateCosine(const double y1, const double y2, const double mu) {
     double mu2;
 
     mu2 = (1 - cos(mu * M_PI)) / 2;
@@ -102,12 +102,12 @@ size_t interpolateCosine(double y1, double y2, double mu) {
 }
 
 sf::Color ColorUtils::lerpColorHsv(sf::Color c0, sf::Color c1, const double t,
-                                   InterpolationFunction::InterpolationFunction func = InterpolationFunction::Linear) {
+                                   const InterpolationFunction::InterpolationFunction func = InterpolationFunction::Linear) {
     if (t == 0) return c0;
     else if (t == 1) return c1;
 
-    auto a = rgb2hsv(c0);
-    auto b = rgb2hsv(c1);
+    const auto a = rgb2hsv(c0);
+    const auto b = rgb2hsv(c1);
 
     size_t (*f_pointer)(double, double, double);
 

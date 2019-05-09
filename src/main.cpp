@@ -31,7 +31,8 @@ void drawFire(DoomFire &fire, sf::Image &img, sf::Texture &tex, sf::RectangleSha
 }
 
 // Initializes our size dependent objects.
-void init_drawing(size_t w, size_t h, DoomFire &df, sf::Image &img, sf::Texture &tex, sf::RectangleShape &rect) {
+void
+init_drawing(const size_t w, const size_t h, DoomFire &df, sf::Image &img, sf::Texture &tex, sf::RectangleShape &rect) {
     //df.resize(w, h); // We resize our simulation. This resets our pixel data.
 
     // On first call fire_image and fire_texture are uninitialized objects and must be created.
@@ -99,9 +100,8 @@ int main(int argc, char **argv) {
     const size_t sim_width = width.Get();
     const size_t sim_palette_size = palette_size.Get();
 
-    ColorSpace::ColorSpace sim_colorspace = parseColorSpace(colorspace.Get());
-    InterpolationFunction::InterpolationFunction sim_interpolation_function = parseInterpolationFunction(
-            interpolation_function.Get());
+    const auto sim_colorspace = parseColorSpace(colorspace.Get());
+    const auto sim_interpolation_function = parseInterpolationFunction(interpolation_function.Get());
 
     // Our actual code below
     auto *event = new sf::Event(); // used to hold data about triggered events. SFML example code had this as a global.
