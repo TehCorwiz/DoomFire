@@ -109,13 +109,11 @@ HsvColor ColorUtils::lerpColorHsv(HsvColor c0, HsvColor c1, const double t,
     size_t (*f_pointer)(double, double, double);
 
     switch (func) {
-        case InterpolationFunction::Linear:
-            f_pointer = interpolateLinear;
-            break;
         case InterpolationFunction::Cosine:
             f_pointer = interpolateCosine;
             break;
         default:
+        case InterpolationFunction::Linear:
             f_pointer = interpolateLinear;
             break;
     }
@@ -137,13 +135,11 @@ RgbColor ColorUtils::lerpColorRgb(RgbColor c0, RgbColor c1, const double t,
     size_t (*f_pointer)(double, double, double);
 
     switch (func) {
-        case InterpolationFunction::Linear:
-            f_pointer = interpolateLinear;
-            break;
         case InterpolationFunction::Cosine:
             f_pointer = interpolateCosine;
             break;
         default:
+        case InterpolationFunction::Linear:
             f_pointer = interpolateLinear;
             break;
     }
