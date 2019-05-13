@@ -6,9 +6,11 @@
 #define DOOMFIRE_DOOMFIRE_H
 
 
-#include <SFML/Graphics/Image.hpp>
 #include <random>
 #include <functional>
+
+#include <SFML/Graphics/Image.hpp>
+
 #include "../libs/ColorUtils.h"
 
 class DoomFire {
@@ -95,6 +97,14 @@ private:
     double _rnd();
 
     sf::Color _getDynamicColor(size_t);
+
+    RgbColor _color2rgb(const sf::Color &);
+
+    HsvColor _color2hsv(const sf::Color &);
+
+    sf::Color _rgb2color(const RgbColor &);
+
+    sf::Color _hsv2color(const HsvColor &);
 };
 
 

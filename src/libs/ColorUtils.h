@@ -28,16 +28,22 @@ typedef struct {
     size_t v;       // a fraction between 0 and 1
 } HsvColor;
 
+typedef struct {
+    size_t r;
+    size_t g;
+    size_t b;
+} RgbColor;
+
 class ColorUtils {
 
 public:
-    static HsvColor rgb2hsv(sf::Color);
+    static HsvColor rgb2hsv(RgbColor);
 
-    static sf::Color hsv2rgb(HsvColor hsv);
+    static RgbColor hsv2rgb(HsvColor);
 
-    static sf::Color lerpColorHsv(sf::Color, sf::Color, double, InterpolationFunction::InterpolationFunction);
+    static HsvColor lerpColorHsv(HsvColor, HsvColor, double, InterpolationFunction::InterpolationFunction);
 
-    static sf::Color lerpColorRgb(sf::Color, sf::Color, double, InterpolationFunction::InterpolationFunction);
+    static RgbColor lerpColorRgb(RgbColor, RgbColor, double, InterpolationFunction::InterpolationFunction);
 };
 
 

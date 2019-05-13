@@ -2,11 +2,10 @@
 // Created by corwin on 5/8/19.
 //
 
-#include <SFML/Graphics/Color.hpp>
 #include <cmath>
 #include "ColorUtils.h"
 
-HsvColor ColorUtils::rgb2hsv(const sf::Color rgb) {
+HsvColor ColorUtils::rgb2hsv(RgbColor rgb) {
     HsvColor hsv;
     unsigned char rgbMin, rgbMax;
 
@@ -36,8 +35,9 @@ HsvColor ColorUtils::rgb2hsv(const sf::Color rgb) {
     return hsv;
 }
 
-sf::Color ColorUtils::hsv2rgb(const HsvColor hsv) {
-    sf::Color rgb;
+RgbColor ColorUtils::hsv2rgb(HsvColor hsv) {
+    RgbColor rgb;
+
     unsigned char region, remainder, p, q, t;
 
     if (hsv.s == 0) {
@@ -101,13 +101,10 @@ size_t interpolateCosine(const double y1, const double y2, const double mu) {
     return ceil(y1 * (1 - mu2) + y2 * mu2);
 }
 
-sf::Color ColorUtils::lerpColorHsv(sf::Color c0, sf::Color c1, const double t,
-                                   const InterpolationFunction::InterpolationFunction func = InterpolationFunction::Linear) {
+HsvColor ColorUtils::lerpColorHsv(HsvColor c0, HsvColor c1, const double t,
+                                  const InterpolationFunction::InterpolationFunction func = InterpolationFunction::Linear) {
     if (t == 0) return c0;
     else if (t == 1) return c1;
-
-    const auto a = rgb2hsv(c0);
-    const auto b = rgb2hsv(c1);
 
     size_t (*f_pointer)(double, double, double);
 
@@ -124,16 +121,16 @@ sf::Color ColorUtils::lerpColorHsv(sf::Color c0, sf::Color c1, const double t,
     }
 
     auto out = HsvColor{
-            f_pointer(a.h, b.h, t),
-            f_pointer(a.s, b.s, t),
-            f_pointer(a.v, b.v, t)
+            f_pointer(c0.h, c1.h, t),
+            f_pointer(c0.s, c1.s, t),
+            f_pointer(c0.v, c1.v, t)
     };
 
-    return hsv2rgb(out);
+    return out;
 }
 
-sf::Color ColorUtils::lerpColorRgb(sf::Color c0, sf::Color c1, const double t,
-                                   InterpolationFunction::InterpolationFunction func = InterpolationFunction::Linear) {
+RgbColor ColorUtils::lerpColorRgb(RgbColor c0, RgbColor c1, const double t,
+                                  InterpolationFunction::InterpolationFunction func = InterpolationFunction::Linear) {
     if (t == 0) return c0;
     else if (t == 1) return c1;
 
@@ -151,11 +148,11 @@ sf::Color ColorUtils::lerpColorRgb(sf::Color c0, sf::Color c1, const double t,
             break;
     }
 
-    auto out = sf::Color(
+    auto out = RgbColor{
             f_pointer(c0.r, c1.r, t),
             f_pointer(c0.g, c1.g, t),
             f_pointer(c0.b, c1.b, t)
-    );
+    };
 
     return out;
 }

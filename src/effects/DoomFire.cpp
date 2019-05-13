@@ -4,8 +4,9 @@
 
 #include <stdio.h>
 
-#include "DoomFire.h"
 #include "../libs/ColorUtils.h"
+
+#include "DoomFire.h"
 
 // Initializes the random number generator.
 void DoomFire::_initRng() {
@@ -187,11 +188,51 @@ sf::Color DoomFire::_getDynamicColor(const size_t palette_idx) {
 
     switch (_colorspace) {
         case ColorSpace::HSV:
-            return ColorUtils::lerpColorHsv(CLASSIC_PALETTE[scaled_idx], CLASSIC_PALETTE[scaled_idx + 1], scaled_fraction,
-                                _interpolation_function);
+            return _hsv2color(ColorUtils::lerpColorHsv(_color2hsv(CLASSIC_PALETTE[scaled_idx]),
+                                                       _color2hsv(CLASSIC_PALETTE[scaled_idx + 1]),
+                                                       scaled_fraction,
+                                                       _interpolation_function));
         default:
         case ColorSpace::RGB:
-            return ColorUtils::lerpColorRgb(CLASSIC_PALETTE[scaled_idx], CLASSIC_PALETTE[scaled_idx + 1], scaled_fraction,
-                                _interpolation_function);
+            return _rgb2color(ColorUtils::lerpColorRgb(_color2rgb(CLASSIC_PALETTE[scaled_idx]),
+                                                       _color2rgb(CLASSIC_PALETTE[scaled_idx + 1]),
+                                                       scaled_fraction,
+                                                       _interpolation_function));
     }
+}
+
+RgbColor DoomFire::_color2rgb(const sf::Color &c) {
+    return RgbColor{
+            c.r,
+            c.g,
+            c.b
+    };
+}
+
+sf::Color DoomFire::_rgb2color(const RgbColor &rgb) {
+    return sf::Color{
+            static_cast<sf::Uint8>(rgb.r),
+            static_cast<sf::Uint8>(rgb.g),
+            static_cast<sf::Uint8>(rgb.b),
+    };
+}
+
+HsvColor DoomFire::_color2hsv(const sf::Color &c) {
+    auto rgb = RgbColor{
+            c.r,
+            c.g,
+            c.b
+    };
+
+    return ColorUtils::rgb2hsv(rgb);
+}
+
+sf::Color DoomFire::_hsv2color(const HsvColor &hsv) {
+    auto rgb = ColorUtils::hsv2rgb(hsv);
+
+    return sf::Color{
+            static_cast<sf::Uint8>(rgb.r),
+            static_cast<sf::Uint8>(rgb.g),
+            static_cast<sf::Uint8>(rgb.b),
+    };
 }
