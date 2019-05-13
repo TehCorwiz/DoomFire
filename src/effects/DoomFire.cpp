@@ -218,11 +218,7 @@ sf::Color DoomFire::_rgb2color(const RgbColor &rgb) {
 }
 
 HsvColor DoomFire::_color2hsv(const sf::Color &c) {
-    auto rgb = RgbColor{
-            c.r,
-            c.g,
-            c.b
-    };
+    auto rgb = _color2rgb(c);
 
     return ColorUtils::rgb2hsv(rgb);
 }
@@ -230,9 +226,5 @@ HsvColor DoomFire::_color2hsv(const sf::Color &c) {
 sf::Color DoomFire::_hsv2color(const HsvColor &hsv) {
     auto rgb = ColorUtils::hsv2rgb(hsv);
 
-    return sf::Color{
-            static_cast<sf::Uint8>(rgb.r),
-            static_cast<sf::Uint8>(rgb.g),
-            static_cast<sf::Uint8>(rgb.b),
-    };
+    return _rgb2color(rgb);
 }
