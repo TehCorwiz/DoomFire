@@ -28,7 +28,7 @@ constexpr static size_t DEFAULT_PALETTE_SIZE = DEFAULT_HEIGHT / 4;
 
 // TARGET_TICK_RATE: This is our target FPS (more or less) down the road I may split ticks from frames and run the sim
 // at either a higher or lower tick rate, but keep FPS locked to some common value, 30 or 60).
-const static uint TARGET_TICK_RATE = 70;
+const static uint TARGET_TICK_RATE = 28;
 
 // SECOND_NS: The number of nanoseconds in a second.
 const static uint SECOND_NS = 1000000;
