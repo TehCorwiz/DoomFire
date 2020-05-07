@@ -82,29 +82,33 @@ private:
     size_t _height;
     size_t _fire_size;
     size_t _paletteSize;
+
+    HsvColor *_hsv_palette;
+    RgbColor *_rgb_palette;
+
     ColorSpace::ColorSpace _colorspace;
-    InterpolationFunction::InterpolationFunction _interpolation_function;
+
+    size_t (*_interpolation_function)(double, double, double);
 
     std::vector<size_t> _fireCells;
 
-    std::minstd_rand _rnd_gen;
-    std::uniform_real_distribution<double> _rnd_dist;
-
-    void _initRng();
-
     void _initFire();
 
-    double _rnd();
+    static double _rnd();
 
     sf::Color _getDynamicColor(size_t);
 
-    RgbColor _color2rgb(const sf::Color &);
+    static RgbColor _color2rgb(const sf::Color &);
 
-    HsvColor _color2hsv(const sf::Color &);
+    static HsvColor _color2hsv(const sf::Color &);
 
-    sf::Color _rgb2color(const RgbColor &);
+    static sf::Color _rgb2color(const RgbColor &);
 
-    sf::Color _hsv2color(const HsvColor &);
+    static sf::Color _hsv2color(const HsvColor &);
+
+    HsvColor *_generateHsvPalette();
+
+    RgbColor *_generateRgbPalette();
 };
 
 

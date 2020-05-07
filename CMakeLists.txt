@@ -13,6 +13,7 @@ add_executable(
         src/libs/ColorUtils.h
         src/libs/DefaultValues.h
         src/libs/ParseArguments.h
+        src/libs/InterpolationFunctions.h
 )
 
 target_link_libraries(

@@ -90,33 +90,9 @@ RgbColor ColorUtils::hsv2rgb(HsvColor hsv) {
     return rgb;
 }
 
-size_t interpolateLinear(const double v1, const double v2, const double mu) {
-    return ceil(v1 * (1 - mu) + v2 * mu);
-}
-
-size_t interpolateCosine(const double y1, const double y2, const double mu) {
-    double mu2;
-
-    mu2 = (1 - cos(mu * M_PI)) / 2;
-    return ceil(y1 * (1 - mu2) + y2 * mu2);
-}
-
-HsvColor ColorUtils::lerpColorHsv(HsvColor c0, HsvColor c1, const double t,
-                                  const InterpolationFunction::InterpolationFunction func = InterpolationFunction::Linear) {
+HsvColor ColorUtils::lerpColorHsv(HsvColor c0, HsvColor c1, const double t, size_t (*f_pointer)(double, double, double)) {
     if (t == 0) return c0;
     else if (t == 1) return c1;
-
-    size_t (*f_pointer)(double, double, double);
-
-    switch (func) {
-        case InterpolationFunction::Cosine:
-            f_pointer = interpolateCosine;
-            break;
-        default:
-        case InterpolationFunction::Linear:
-            f_pointer = interpolateLinear;
-            break;
-    }
 
     auto out = HsvColor{
             f_pointer(c0.h, c1.h, t),
@@ -127,22 +103,9 @@ HsvColor ColorUtils::lerpColorHsv(HsvColor c0, HsvColor c1, const double t,
     return out;
 }
 
-RgbColor ColorUtils::lerpColorRgb(RgbColor c0, RgbColor c1, const double t,
-                                  InterpolationFunction::InterpolationFunction func = InterpolationFunction::Linear) {
+RgbColor ColorUtils::lerpColorRgb(RgbColor c0, RgbColor c1, const double t, size_t (*f_pointer)(double, double, double)) {
     if (t == 0) return c0;
     else if (t == 1) return c1;
-
-    size_t (*f_pointer)(double, double, double);
-
-    switch (func) {
-        case InterpolationFunction::Cosine:
-            f_pointer = interpolateCosine;
-            break;
-        default:
-        case InterpolationFunction::Linear:
-            f_pointer = interpolateLinear;
-            break;
-    }
 
     auto out = RgbColor{
             f_pointer(c0.r, c1.r, t),

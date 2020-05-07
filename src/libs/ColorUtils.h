@@ -39,11 +39,11 @@ class ColorUtils {
 public:
     static HsvColor rgb2hsv(RgbColor);
 
+    static HsvColor lerpColorHsv(HsvColor c0, HsvColor c1, double t, size_t (*f_pointer)(double, double, double));
+
     static RgbColor hsv2rgb(HsvColor);
 
-    static HsvColor lerpColorHsv(HsvColor, HsvColor, double, InterpolationFunction::InterpolationFunction);
-
-    static RgbColor lerpColorRgb(RgbColor, RgbColor, double, InterpolationFunction::InterpolationFunction);
+    static RgbColor lerpColorRgb(RgbColor c0, RgbColor c1, double t, size_t (*f_pointer)(double, double, double));
 };
 
 

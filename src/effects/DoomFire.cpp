@@ -2,21 +2,17 @@
 // Created by corwin on 5/1/19.
 //
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "../libs/ColorUtils.h"
 
 #include "DoomFire.h"
-
-// Initializes the random number generator.
-void DoomFire::_initRng() {
-    _rnd_gen = std::minstd_rand(std::random_device{}());
-    _rnd_dist = std::uniform_real_distribution<double>(0.0, 1.0);
-}
+#include "../libs/InterpolationFunctions.h"
 
 // Generates a random number.
 double DoomFire::_rnd() {
-    return _rnd_dist(_rnd_gen);
+    float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    return (double) r;
 }
 
 // Initializes our fire.
@@ -28,7 +24,6 @@ double DoomFire::_rnd() {
 // starting colors.
 void DoomFire::_initFire() {
     _fireCells = std::vector<size_t>(_fire_size);
-    size_t r_p_idx;
 
     // Fill vector with defaults
     for (int y = 0; y < _height; y++) {
@@ -49,11 +44,22 @@ DoomFire::DoomFire(const size_t w, const size_t h, const size_t palette_size, co
     _width = w;
     _height = h;
     _fire_size = w * h;
-    _paletteSize = palette_size;
     _colorspace = colorspace;
-    _interpolation_function = interpolation_function;
+    _paletteSize = palette_size;
 
-    _initRng();
+    _hsv_palette = _generateHsvPalette();
+    _rgb_palette = _generateRgbPalette();
+
+    switch (interpolation_function) {
+        case InterpolationFunction::Linear:
+            _interpolation_function = interpolateLinear;
+            break;
+        case InterpolationFunction::Cosine:
+            _interpolation_function = interpolateCosine;
+            break;
+    }
+
+//    _initRng();
 
     _initFire();
 }
@@ -129,7 +135,7 @@ void DoomFire::spreadFire(size_t src_idx) {
 // This was used earlier in development for testing various things.
 void DoomFire::drawCheck() {
     bool is_color_pixel = false;
-    int color_index = 0;
+    size_t color_index = 0;
 
     for (int y = 0; y < (_height - 1); y++) {
         for (int x = 0; x < _width; x++) {
@@ -182,22 +188,26 @@ sf::Color DoomFire::_getDynamicColor(const size_t palette_idx) {
     // We need to  extract this fractional component to feed into our lerp method.
     double scaled_fraction = intermediate_scale - scaled_idx;
 
-    // We zero on small differences
-    if (fabs(scaled_fraction) <= 0.00001)
-        scaled_fraction = 0;
-
     switch (_colorspace) {
         case ColorSpace::HSV:
-            return _hsv2color(ColorUtils::lerpColorHsv(_color2hsv(CLASSIC_PALETTE[scaled_idx]),
-                                                       _color2hsv(CLASSIC_PALETTE[scaled_idx + 1]),
-                                                       scaled_fraction,
-                                                       _interpolation_function));
+            return _hsv2color(
+                    ColorUtils::lerpColorHsv(
+                            _hsv_palette[scaled_idx],
+                            _hsv_palette[scaled_idx + 1],
+                            scaled_fraction,
+                            _interpolation_function
+                    )
+            );
         default:
         case ColorSpace::RGB:
-            return _rgb2color(ColorUtils::lerpColorRgb(_color2rgb(CLASSIC_PALETTE[scaled_idx]),
-                                                       _color2rgb(CLASSIC_PALETTE[scaled_idx + 1]),
-                                                       scaled_fraction,
-                                                       _interpolation_function));
+            return _rgb2color(
+                    ColorUtils::lerpColorRgb(
+                            _rgb_palette[scaled_idx],
+                            _rgb_palette[scaled_idx + 1],
+                            scaled_fraction,
+                            _interpolation_function
+                    )
+            );
     }
 }
 
@@ -227,4 +237,24 @@ sf::Color DoomFire::_hsv2color(const HsvColor &hsv) {
     auto rgb = ColorUtils::hsv2rgb(hsv);
 
     return _rgb2color(rgb);
+}
+
+HsvColor *DoomFire::_generateHsvPalette() {
+    auto *hsv_palette = new HsvColor[_paletteSize];
+
+    for (int i = 0; i < _paletteSize; i++) {
+        hsv_palette[i] = _color2hsv(CLASSIC_PALETTE[i]);
+    }
+
+    return hsv_palette;
+}
+
+RgbColor *DoomFire::_generateRgbPalette() {
+    auto *rgb_palette = new RgbColor[_paletteSize];
+
+    for (int i = 0; i < _paletteSize; i++) {
+        rgb_palette[i] = _color2rgb(CLASSIC_PALETTE[i]);
+    }
+
+    return rgb_palette;
 }
