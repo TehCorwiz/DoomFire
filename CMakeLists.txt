@@ -11,6 +11,8 @@ add_executable(
         src/main.h
         src/libs/ColorUtils.cpp
         src/libs/ColorUtils.h
+        src/libs/DefaultValues.h
+        src/libs/ParseArguments.h
 )
 
 target_link_libraries(
