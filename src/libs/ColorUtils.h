@@ -13,7 +13,13 @@
 class ColorUtils {
 
 public:
-    static sf::Color lerpColor(sf::Color c0, sf::Color c1, double t, bool use_hsv, double (*f_pointer)(double, double, double));
+    static sf::Color lerpColor(
+            sf::Color c0,
+            sf::Color c1,
+            double t,
+            bool use_hsv,
+            double (*f_pointer)(double, double, double)
+    );
 
     static std::vector<sf::Color> expandPalette(
             const std::vector<sf::Color> &,
