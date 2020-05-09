@@ -16,6 +16,7 @@ struct parameters {
     size_t palette_size = 0;
 
     bool capped = false;
+    bool hsv = false;
 
     InterpolationFunction::InterpolationFunction interpolation_function = DEFAULT_INTERPOLATION_FUNCTION;
 
@@ -69,6 +70,11 @@ static parameters parseArguments(int argc, char **argv) {
             "uncapped",
             "Toggles tick limiting. Takes no arguments.",
             {'u', "uncapped"}, false);
+    args::Flag hsv(
+            parser,
+            "hsv",
+            "Toggles interpolating in the HSV colorspace. Takes no arguments.",
+            {"hsv"}, false);
     try {
         parser.ParseCLI(argc, argv);
 
@@ -76,6 +82,7 @@ static parameters parseArguments(int argc, char **argv) {
         params.width = width.Get();
         params.palette_size = palette_size.Get();
         params.capped = !uncapped.Get();
+        params.hsv = hsv.Get();
 
         params.interpolation_function = parseInterpolationFunction(interpolation_function.Get());
 

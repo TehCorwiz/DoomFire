@@ -16,8 +16,13 @@
 
 class DoomFire {
 public:
-    DoomFire(size_t w, size_t h, size_t = CLASSIC_PALETTE_SIZE,
-             InterpolationFunction::InterpolationFunction = InterpolationFunction::Linear);
+    DoomFire(
+            size_t w,
+            size_t h,
+            size_t = CLASSIC_PALETTE_SIZE,
+            bool hsv = false,
+            InterpolationFunction::InterpolationFunction = InterpolationFunction::Linear
+    );
 
     sf::Image getImage();
 
@@ -36,6 +41,7 @@ private:
     size_t _height;
     size_t _fire_size;
     size_t _palette_size;
+    bool _use_hsv;
     std::vector<sf::Color> _classic_palette;
     std::vector<sf::Color> _palette;
 

@@ -72,6 +72,7 @@ int main(int argc, char **argv) {
             params.width,
             params.height,
             params.palette_size,
+            params.hsv,
             params.interpolation_function
     ); // Custom virtual palette size
 

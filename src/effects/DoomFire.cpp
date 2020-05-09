@@ -37,12 +37,18 @@ void DoomFire::_initFire() {
 }
 
 // Our constructor. Stores our parameters and bootstraps our rng and cells.
-DoomFire::DoomFire(const size_t w, const size_t h, const size_t palette_size,
-                   const InterpolationFunction::InterpolationFunction interpolation_function) {
+DoomFire::DoomFire(
+        const size_t w,
+        const size_t h,
+        const size_t palette_size,
+        const bool use_hsv,
+        const InterpolationFunction::InterpolationFunction interpolation_function
+) {
     _width = w;
     _height = h;
     _fire_size = w * h;
     _palette_size = palette_size;
+    _use_hsv = use_hsv;
     _classic_palette = _generateClassicPalette();
 
     switch (interpolation_function) {
@@ -167,5 +173,5 @@ void DoomFire::resize(size_t w, size_t h) {
 std::vector<sf::Color> DoomFire::_generatePalette() {
     if (_palette_size == CLASSIC_PALETTE_SIZE) return _classic_palette;
 
-    return ColorUtils::expandPalette(_classic_palette, _palette_size, _interpolation_function);
+    return ColorUtils::expandPalette(_classic_palette, _palette_size, _use_hsv, _interpolation_function);
 }

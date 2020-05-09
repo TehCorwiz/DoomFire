@@ -8,23 +8,36 @@
 
 sf::Color ColorUtils::lerpColor(sf::Color c0, sf::Color c1,
                                 const double t,
+                                const bool use_hsv,
                                 double (*f_pointer)(double, double, double)) {
     if (t == 0) return c0;
     else if (t == 1) return c1;
 
-    auto hsv0 = color2Hsv(c0);
-    auto hsv1 = color2Hsv(c1);
-    auto h = f_pointer(hsv0.h, hsv1.h, t);
-    auto s = f_pointer(hsv0.s, hsv1.s, t);
-    auto v = f_pointer(hsv0.s, hsv1.v, t);
+    if (use_hsv) {
+        auto hsv0 = color2Hsv(c0);
+        auto hsv1 = color2Hsv(c1);
+        auto h = f_pointer(hsv0.h, hsv1.h, t);
+        auto s = f_pointer(hsv0.s, hsv1.s, t);
+        auto v = f_pointer(hsv0.s, hsv1.v, t);
 
-    auto int_hsv = Hsv{h, s, v,};
+        auto int_hsv = Hsv{h, s, v,};
 
-    return hsv2Color(int_hsv);
+        return hsv2Color(int_hsv);
+    } else {
+        return sf::Color{
+                static_cast<sf::Uint8>(f_pointer(c0.r, c1.r, t)),
+                static_cast<sf::Uint8>(f_pointer(c0.g, c1.g, t)),
+                static_cast<sf::Uint8>(f_pointer(c0.b, c1.b, t))
+        };
+    }
 }
 
-std::vector<sf::Color> ColorUtils::expandPalette(const std::vector<sf::Color> &old_palette, size_t new_length,
-                                                 double (*_interpolation_function)(double, double, double)) {
+std::vector<sf::Color> ColorUtils::expandPalette(
+        const std::vector<sf::Color> &old_palette,
+        size_t new_length,
+        bool use_hsv,
+        double (*_interpolation_function)(double, double, double)
+) {
     std::vector<sf::Color> new_palette;
 
     double step_size = (double) old_palette.size() / new_length;
@@ -47,7 +60,7 @@ std::vector<sf::Color> ColorUtils::expandPalette(const std::vector<sf::Color> &o
         //      `Invalid reading of size 4`
         auto c1 = old_palette[scaled_idx + 1];
 
-        new_palette.push_back(lerpColor(c0, c1, scaled_fraction, _interpolation_function));
+        new_palette.push_back(lerpColor(c0, c1, scaled_fraction, use_hsv, _interpolation_function));
 
         step += step_size;
     }
