@@ -36,8 +36,8 @@ const static size_t DEFAULT_TARGET_TICK_RATE = 28;
 const static size_t SECOND_NS = 1000000;
 
 // I decided to separate window event handling from the main tick rate. These values set those parameters.
-const static size_t EVENT_TARGET_TICK_RATE = 30;
-const static size_t EVENT_TICK_NS = EVENT_TARGET_TICK_RATE / SECOND_NS;
+const static size_t EVENT_TARGET_TICK_RATE = 10;
+constexpr static size_t EVENT_TICK_NS = SECOND_NS / EVENT_TARGET_TICK_RATE;
 
 
 #endif //DOOMFIRE_DEFAULTVALUES_H

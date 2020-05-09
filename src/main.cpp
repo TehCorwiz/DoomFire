@@ -94,9 +94,7 @@ int main(int argc, char **argv) {
 
         // Calls our window handling code at the start in order.
         // Without handling events the OS will think the app has hung.
-        if ((event_tick_time >= (long) EVENT_TICK_NS)) {
-            handle_window_events(window, event);
-        }
+        if ((event_tick_time >= (long) EVENT_TICK_NS)) handle_window_events(window, event);
 
         // Compares our current tick_time to the time between frames and runs if it's time.
         if (params.capped && (tick_time < (long) target_tick_ns)) continue;
