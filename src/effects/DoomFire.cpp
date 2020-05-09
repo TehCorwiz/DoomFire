@@ -26,8 +26,8 @@ void DoomFire::_initFire() {
     _fireCells = std::vector<size_t>(_fire_size);
 
     // Fill vector with defaults
-    for (int y = 0; y < _height; y++) {
-        for (int x = 0; x < _width; x++) {
+    for (size_t y = 0; y < _height; y++) {
+        for (size_t x = 0; x < _width; x++) {
             if (y == _height - 1) // Bottom row is white (max palette index).
                 // "Hottest" color, in our case white.
                 _fireCells[y * _width + x] = _paletteSize - 1;
@@ -69,8 +69,8 @@ sf::Image DoomFire::getImage() {
     sf::Image img;
     img.create(_width, _height);
 
-    for (int y = 0; y < _height; y++) {
-        for (int x = 0; x < _width; x++) {
+    for (size_t y = 0; y < _height; y++) {
+        for (size_t x = 0; x < _width; x++) {
             size_t palette_idx = _fireCells[y * _width + x];
 
             sf::Color pixel_color = _getDynamicColor(palette_idx);
@@ -84,8 +84,8 @@ sf::Image DoomFire::getImage() {
 
 // Parses our vector of cells and produces an image. This variant writes to an existing image by reference.
 void DoomFire::getImage(sf::Image &img) {
-    for (int y = 0; y < _height; y++) {
-        for (int x = 0; x < _width; x++) {
+    for (size_t y = 0; y < _height; y++) {
+        for (size_t x = 0; x < _width; x++) {
             const size_t palette_idx = _fireCells[y * _width + x];
             const sf::Color pixel_color = _getDynamicColor(palette_idx);
 
@@ -98,8 +98,8 @@ void DoomFire::getImage(sf::Image &img) {
 void DoomFire::doFire() {
     // Starting at horizontal line 1 prevents overwriting the bottom source line of pixels and prevents an integer
     // underflow from occuring later in spreadFire
-    for (int y = 1; y < _height; y++) {
-        for (int x = 0; x < _width; x++) {
+    for (size_t y = 1; y < _height; y++) {
+        for (size_t x = 0; x < _width; x++) {
             spreadFire(y * _width + x);
         }
     }
@@ -137,8 +137,8 @@ void DoomFire::drawCheck() {
     bool is_color_pixel = false;
     size_t color_index = 0;
 
-    for (int y = 0; y < (_height - 1); y++) {
-        for (int x = 0; x < _width; x++) {
+    for (size_t y = 0; y < (_height - 1); y++) {
+        for (size_t x = 0; x < _width; x++) {
             if (is_color_pixel)
                 _fireCells[y * _width + x] = (_paletteSize - 1);
             else
@@ -176,8 +176,6 @@ sf::Color DoomFire::_getDynamicColor(const size_t palette_idx) {
     // Abort if we're on the edge or outside the bounds of our palette
     if (palette_idx >= _paletteSize - 1)
         return CLASSIC_PALETTE[CLASSIC_PALETTE_SIZE - 1];
-    else if (palette_idx < 0)
-        return CLASSIC_PALETTE[0];
 
     // First convert actual index into an index relative to our classic palette
     double intermediate_scale = (((double) palette_idx / (double) _paletteSize) *
@@ -242,7 +240,7 @@ sf::Color DoomFire::_hsv2color(const HsvColor &hsv) {
 HsvColor *DoomFire::_generateHsvPalette() {
     auto *hsv_palette = new HsvColor[_paletteSize];
 
-    for (int i = 0; i < _paletteSize; i++) {
+    for (size_t i = 0; i < _paletteSize; i++) {
         hsv_palette[i] = _color2hsv(CLASSIC_PALETTE[i]);
     }
 
@@ -252,7 +250,7 @@ HsvColor *DoomFire::_generateHsvPalette() {
 RgbColor *DoomFire::_generateRgbPalette() {
     auto *rgb_palette = new RgbColor[_paletteSize];
 
-    for (int i = 0; i < _paletteSize; i++) {
+    for (size_t i = 0; i < _paletteSize; i++) {
         rgb_palette[i] = _color2rgb(CLASSIC_PALETTE[i]);
     }
 
