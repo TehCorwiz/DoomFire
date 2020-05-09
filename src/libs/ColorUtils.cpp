@@ -55,58 +55,40 @@ std::vector<sf::Color> ColorUtils::expandPalette(const std::vector<sf::Color> &o
     return new_palette;
 }
 
-ColorUtils::Hsv ColorUtils::color2Hsv(sf::Color color) {
+ColorUtils::Hsv ColorUtils::color2Hsv(sf::Color rgb) {
     Hsv hsv;
+    unsigned char rgbMin, rgbMax;
 
-    // Convert color values to a ratio
-    double r = color.r / 255.0;
-    double g = color.g / 255.0;
-    double b = color.b / 255.0;
+    rgbMin = rgb.r < rgb.g ? (rgb.r < rgb.b ? rgb.r : rgb.b) : (rgb.g < rgb.b ? rgb.g : rgb.b);
+    rgbMax = rgb.r > rgb.g ? (rgb.r > rgb.b ? rgb.r : rgb.b) : (rgb.g > rgb.b ? rgb.g : rgb.b);
 
-    double cmax = std::max(r, std::max(g, b));
-    double cmin = std::min(r, std::min(g, b));
-
-    double delta = cmax - cmin;
-
-    // V
-    hsv.v = cmax;
+    hsv.v = rgbMax;
     if (hsv.v == 0) {
         hsv.h = 0;
         hsv.s = 0;
         return hsv;
     }
 
-    // S
-    hsv.s = cmax == 0 ? 0 : delta / cmax;
+    hsv.s = 255 * long(rgbMax - rgbMin) / hsv.v;
     if (hsv.s == 0) {
         hsv.h = 0;
         return hsv;
     }
 
-    // H
-    if (cmax == cmin) {
-        hsv.h = 0;
-    } else {
-        if (cmax == r)
-            hsv.h = (g - b) / delta + (g < b ? 6 : 0);
-        else if (cmax == g)
-            hsv.h = (b - r) / delta + 2;
-        else if (cmax == b)
-            hsv.h = (r - g) / delta + 4;
-
-        hsv.h /= 6;
-    }
+    if (rgbMax == rgb.r)
+        hsv.h = 0 + 43 * (rgb.g - rgb.b) / (rgbMax - rgbMin);
+    else if (rgbMax == rgb.g)
+        hsv.h = 85 + 43 * (rgb.b - rgb.r) / (rgbMax - rgbMin);
+    else
+        hsv.h = 171 + 43 * (rgb.r - rgb.g) / (rgbMax - rgbMin);
 
     return hsv;
 }
 
 sf::Color ColorUtils::hsv2Color(ColorUtils::Hsv hsv) {
     sf::Color rgb;
-    int i = int(hsv.h * 6);
-    double f = hsv.h * 6 - i;
-    double p = hsv.v * (1 - hsv.s);
-    double q = hsv.v * (1 - f * hsv.s);
-    double t = hsv.v * (1 - (1 - f) * hsv.s);
+
+    uint64_t region, remainder, p, q, t;
 
     if (hsv.s == 0) {
         rgb.r = hsv.v;
@@ -115,7 +97,14 @@ sf::Color ColorUtils::hsv2Color(ColorUtils::Hsv hsv) {
         return rgb;
     }
 
-    switch (i % 6) {
+    region = hsv.h / 43;
+    remainder = (hsv.h - (region * 43)) * 6;
+
+    p = (uint) (hsv.v * (255 - hsv.s)) >> (uint) 8;
+    q = (uint) (hsv.v * (255 - ((uint) (hsv.s * remainder) >> (uint) 8))) >> (uint) 8;
+    t = (uint) (hsv.v * (255 - (((uint) hsv.s * (255 - remainder)) >> (uint) 8))) >> (uint) 8;
+
+    switch (region) {
         case 0:
             rgb.r = hsv.v;
             rgb.g = t;
@@ -141,7 +130,7 @@ sf::Color ColorUtils::hsv2Color(ColorUtils::Hsv hsv) {
             rgb.g = p;
             rgb.b = hsv.v;
             break;
-        case 5:
+        default:
             rgb.r = hsv.v;
             rgb.g = p;
             rgb.b = q;
@@ -150,3 +139,4 @@ sf::Color ColorUtils::hsv2Color(ColorUtils::Hsv hsv) {
 
     return rgb;
 }
+
