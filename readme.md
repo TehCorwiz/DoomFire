@@ -10,4 +10,3 @@ The project depends on:
 - [SFML](https://www.sfml-dev.org) which is available in the Ubuntu and Fedora package repositories.
 - [args.hxx](https://github.com/Taywee/args)
  
-My ultimate goal is to annotate each code block with in-depth explanations as both a learning and teaching tool. 
