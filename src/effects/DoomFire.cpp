@@ -166,7 +166,6 @@ void DoomFire::resize(size_t w, size_t h) {
 // I have plans to replace with a multi-color gradient palette generator which can generate this or any other
 // color palette of an arbitrary length.
 std::vector<sf::Color> DoomFire::_generatePalette() {
-    // If we're using the default palette then we can just look the value.
     if (_palette_size == CLASSIC_PALETTE_SIZE) return _classic_palette;
 
     return ColorUtils::expandPalette(_classic_palette, _palette_size, _interpolation_function);

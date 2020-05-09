@@ -20,10 +20,10 @@ namespace InterpolationFunction {
 class ColorUtils {
 
 public:
-    static sf::Color lerpColorRgb(sf::Color c0, sf::Color c1, double t, size_t (*)(double, double, double));
+    static sf::Color lerpColorRgb(sf::Color c0, sf::Color c1, double t, double (*)(double, double, double));
 
     static std::vector<sf::Color> expandPalette(const std::vector<sf::Color> &, size_t new_length,
-                                                size_t (*)(double, double, double));
+                                                double (*)(double, double, double));
 };
 
 

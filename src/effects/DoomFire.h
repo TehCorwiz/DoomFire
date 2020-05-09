@@ -39,7 +39,7 @@ private:
     std::vector<sf::Color> _classic_palette;
     std::vector<sf::Color> _palette;
 
-    size_t (*_interpolation_function)(double, double, double);
+    double (*_interpolation_function)(double, double, double);
 
     std::vector<size_t> _fireCells;
 

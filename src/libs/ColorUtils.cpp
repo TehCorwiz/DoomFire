@@ -8,7 +8,7 @@
 
 sf::Color ColorUtils::lerpColorRgb(sf::Color c0, sf::Color c1,
                                    const double t,
-                                   size_t (*f_pointer)(double, double, double)) {
+                                   double (*f_pointer)(double, double, double)) {
     if (t == 0) return c0;
     else if (t == 1) return c1;
 
@@ -22,15 +22,15 @@ sf::Color ColorUtils::lerpColorRgb(sf::Color c0, sf::Color c1,
 }
 
 std::vector<sf::Color> ColorUtils::expandPalette(const std::vector<sf::Color> &old_palette, size_t new_length,
-                                                 size_t (*_interpolation_function)(double, double, double)) {
+                                                 double (*_interpolation_function)(double, double, double)) {
     std::vector<sf::Color> new_palette;
 
     double step_size = (double) old_palette.size() / new_length;
     double step = 0;
 
-    while (step < new_length - 1) {
+    while (step < (double) new_length - 1) {
         // First convert actual index into an index relative to our classic palette
-        auto intermediate_scale = (step / new_length) * old_palette.size();
+        auto intermediate_scale = ((double) step / new_length) * (double) old_palette.size();
 
         // This is the current index of the old_palette.
         const size_t scaled_idx = floor(intermediate_scale);

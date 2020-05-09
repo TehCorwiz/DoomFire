@@ -7,11 +7,11 @@
 
 #include <cmath>
 
-size_t interpolateLinear(const double v1, const double v2, const double mu) {
+double interpolateLinear(const double v1, const double v2, const double mu) {
     return ceil(v1 * (1 - mu) + v2 * mu);
 }
 
-size_t interpolateCosine(const double v1, const double v2, const double mu) {
+double interpolateCosine(const double v1, const double v2, const double mu) {
     double mu2;
 
     mu2 = (1 - cos(mu * M_PI)) / 2;
