@@ -57,10 +57,15 @@ int main(int argc, char **argv) {
     sf::Texture fire_texture; // Constructs Texture onto which we can draw our Image.
     sf::RectangleShape screen_rect; // Constructs a rectangle which takes our texture and can be draw to our window.
 
-    // Mess with palette sizes
     if (params.palette_size == 0) {
-        params.palette_size = (DEFAULT_PALETTE_SIZE + params.height) / 5;
+        const double palette_size_ratio = (double) DEFAULT_PALETTE_SIZE / DEFAULT_HEIGHT;
+        params.palette_size = params.height * palette_size_ratio;
     }
+
+    const double tick_ratio = (double) DEFAULT_TARGET_TICK_RATE / DEFAULT_HEIGHT;
+    const double target_tick_rate = params.height * tick_ratio;
+
+    const size_t target_ns = SECOND_NS / target_tick_rate;
 
     // Initialize the fire sim
     DoomFire doom_fire(
@@ -78,7 +83,7 @@ int main(int argc, char **argv) {
 
     clock_t last_tick_at = clock(); // We store the last time a tick occurred so we can calculate the tick time.
 
-    sf::Event event; // used to hold data about triggered events. SFML example code had this as a global.
+    sf::Event event{}; // used to hold data about triggered events. SFML example code had this as a global.
 
     // Here's our main loop. It runs as long as the window is open.
     while (window.isOpen()) {
@@ -89,7 +94,7 @@ int main(int argc, char **argv) {
         const clock_t tick_time = clock() - last_tick_at; // Calculates the time between our last tick and now.
 
         // Compares our current tick_time to the time between frames and runs if it's time.
-        if (tick_time >= TICK_NS) {
+        if (tick_time >= target_ns) {
             // Runs one iteration of our fire simulation.
             doom_fire.doFire();
 

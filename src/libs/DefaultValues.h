@@ -14,7 +14,7 @@
 // DEFAULT_HEIGHT: The value was chosen due to how the original algo works. CLASSIC_PALETTE_SIZE (defined in DoomFire.h) affects how
 // high the flames are drawn. Thus we need a value that isn't too short or too tall. The original value, 168 looks
 // really good with some but not too much vertical space to allow for little `sparks`. However, since the resolution is
-// dependent on the CLASSIC_PALETTE_SIZE in the first place, I'm adopting a calculated calue in order to support additional
+// dependent on the CLASSIC_PALETTE_SIZE in the first place, I'm adopting a calculated value in order to support additional
 // resolutions down the road.
 constexpr static size_t DEFAULT_HEIGHT = 240;
 
@@ -28,14 +28,11 @@ constexpr static size_t DEFAULT_WIDTH = (size_t) (DEFAULT_HEIGHT * (16.0 / 9.0))
 const static size_t CLASSIC_PALETTE_SIZE = 38;
 constexpr static size_t DEFAULT_PALETTE_SIZE = 60;
 
-// TARGET_TICK_RATE: This is our target FPS (more or less) down the road I may split ticks from frames and run the sim
+// DEFAULT_TARGET_TICK_RATE: This is our target FPS (more or less) down the road I may split ticks from frames and run the sim
 // at either a higher or lower tick rate, but keep FPS locked to some common value, 30 or 60).
-const static uint TARGET_TICK_RATE = 28;
+const static uint DEFAULT_TARGET_TICK_RATE = 28;
 
 // SECOND_NS: The number of nanoseconds in a second.
 const static uint SECOND_NS = 1000000;
-
-// TICK_NS: The number of nanoseconds per tick for our chosen rate.
-constexpr static uint TICK_NS = SECOND_NS / TARGET_TICK_RATE;
 
 #endif //DOOMFIRE_DEFAULTVALUES_H

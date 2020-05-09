@@ -54,12 +54,6 @@ static parameters parseArguments(int argc, char **argv) {
             "palette_size",
             "Size of simulation's palette",
             {'p', "palette_size"}, 0);
-    args::ValueFlag<std::string> colorspace(
-            parser,
-            "colorspace",
-            "Color space of fire simulation. Currently supports RGB or HSV",
-            {'c', "colorspace"},
-            "RGB");
     args::ValueFlag<std::string> interpolation_function(
             parser,
             "interpolation_function",
