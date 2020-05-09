@@ -30,9 +30,14 @@ constexpr static size_t DEFAULT_PALETTE_SIZE = 60;
 
 // DEFAULT_TARGET_TICK_RATE: This is our target FPS (more or less) down the road I may split ticks from frames and run the sim
 // at either a higher or lower tick rate, but keep FPS locked to some common value, 30 or 60).
-const static uint DEFAULT_TARGET_TICK_RATE = 28;
+const static size_t DEFAULT_TARGET_TICK_RATE = 28;
 
 // SECOND_NS: The number of nanoseconds in a second.
-const static uint SECOND_NS = 1000000;
+const static size_t SECOND_NS = 1000000;
+
+// I decided to separate window event handling from the main tick rate. These values set those parameters.
+const static size_t EVENT_TARGET_TICK_RATE = 30;
+const static size_t EVENT_TICK_NS = EVENT_TARGET_TICK_RATE / SECOND_NS;
+
 
 #endif //DOOMFIRE_DEFAULTVALUES_H
