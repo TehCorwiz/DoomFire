@@ -25,7 +25,6 @@ static auto parseInterpolationFunction(const std::string &interpolation_function
     return InterpolationFunction::Linear;
 }
 
-
 static parameters parseArguments(int argc, char **argv) {
     auto params = parameters();
 
