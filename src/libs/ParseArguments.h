@@ -14,6 +14,7 @@ struct parameters {
     size_t height = 0;
     size_t width = 0;
     size_t palette_size = 0;
+    bool capped = false;
     InterpolationFunction::InterpolationFunction interpolation_function = InterpolationFunction::Linear;
     args::Error *error = nullptr;
     std::string error_message = "";
@@ -59,13 +60,18 @@ static parameters parseArguments(int argc, char **argv) {
             "interpolation_function",
             "The interpolation function of palette scaling. Currently supports `Linear` or `Cosine`",
             {'i', "interpolation_function"}, "Linear");
-
+    args::Flag uncapped(
+            parser,
+            "uncapped",
+            "Toggles tick limiting. Takes no arguments.",
+            {'u', "uncapped"}, false);
     try {
         parser.ParseCLI(argc, argv);
 
         params.height = height.Get();
         params.width = width.Get();
         params.palette_size = palette_size.Get();
+        params.capped = !uncapped.Get();
 
         params.interpolation_function = parseInterpolationFunction(interpolation_function.Get());
 

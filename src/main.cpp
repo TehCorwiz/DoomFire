@@ -94,24 +94,24 @@ int main(int argc, char **argv) {
         const clock_t tick_time = clock() - last_tick_at; // Calculates the time between our last tick and now.
 
         // Compares our current tick_time to the time between frames and runs if it's time.
-        if (tick_time >= target_ns) {
-            // Runs one iteration of our fire simulation.
-            doom_fire.doFire();
+        if (params.capped && (tick_time < (long) target_ns)) continue;
 
-            // Calls our drawing code above to load the pixel data into the texture
-            drawFire(doom_fire, fire_image, fire_texture, screen_rect);
+        // Runs one iteration of our fire simulation.
+        doom_fire.doFire();
 
-            // Saves our current time to feed back into the above time tick time calculations.
-            last_tick_at = clock();
+        // Calls our drawing code above to load the pixel data into the texture
+        drawFire(doom_fire, fire_image, fire_texture, screen_rect);
 
-            // These three lines:
-            // 1) Clear the screen
-            // 2) Draw our simulation
-            // 3) Blit the window to the screen
-            window.clear();
-            window.draw(screen_rect);
-            window.display();
-        }
+        // Saves our current time to feed back into the above time tick time calculations.
+        last_tick_at = clock();
+
+        // These three lines:
+        // 1) Clear the screen
+        // 2) Draw our simulation
+        // 3) Blit the window to the screen
+        window.clear();
+        window.draw(screen_rect);
+        window.display();
     }
 
     // Returns success if we closed the program and didn't crash.
