@@ -3,8 +3,7 @@
 //
 
 #include <cstdio>
-
-#include "../libs/ColorUtils.h"
+#include <SFML/Graphics/Image.hpp>
 
 #include "DoomFire.h"
 #include "../libs/InterpolationFunctions.h"
@@ -30,7 +29,7 @@ void DoomFire::_initFire() {
         for (size_t x = 0; x < _width; x++) {
             if (y == _height - 1) // Bottom row is white (max palette index).
                 // "Hottest" color, in our case white.
-                _fireCells[y * _width + x] = _paletteSize - 1;
+                _fireCells[y * _width + x] = _palette_size - 1;
 
             else // Rest of cells are black (palette index 0).
                 _fireCells[y * _width + x] = 0;
@@ -39,16 +38,13 @@ void DoomFire::_initFire() {
 }
 
 // Our constructor. Stores our parameters and bootstraps our rng and cells.
-DoomFire::DoomFire(const size_t w, const size_t h, const size_t palette_size, const ColorSpace::ColorSpace colorspace,
+DoomFire::DoomFire(const size_t w, const size_t h, const size_t palette_size,
                    const InterpolationFunction::InterpolationFunction interpolation_function) {
     _width = w;
     _height = h;
     _fire_size = w * h;
-    _colorspace = colorspace;
-    _paletteSize = palette_size;
-
-    _hsv_palette = _generateHsvPalette();
-    _rgb_palette = _generateRgbPalette();
+    _palette_size = palette_size;
+    _classic_palette = _generateClassicPalette();
 
     switch (interpolation_function) {
         case InterpolationFunction::Linear:
@@ -59,7 +55,7 @@ DoomFire::DoomFire(const size_t w, const size_t h, const size_t palette_size, co
             break;
     }
 
-//    _initRng();
+    _palette = _generatePalette();
 
     _initFire();
 }
@@ -73,7 +69,7 @@ sf::Image DoomFire::getImage() {
         for (size_t x = 0; x < _width; x++) {
             size_t palette_idx = _fireCells[y * _width + x];
 
-            sf::Color pixel_color = _getDynamicColor(palette_idx);
+            sf::Color pixel_color = _palette[palette_idx];
 
             img.setPixel(x, y, pixel_color);
         }
@@ -87,7 +83,7 @@ void DoomFire::getImage(sf::Image &img) {
     for (size_t y = 0; y < _height; y++) {
         for (size_t x = 0; x < _width; x++) {
             const size_t palette_idx = _fireCells[y * _width + x];
-            const sf::Color pixel_color = _getDynamicColor(palette_idx);
+            const sf::Color pixel_color = _palette[palette_idx];
 
             img.setPixel(x, y, pixel_color);
         }
@@ -140,7 +136,7 @@ void DoomFire::drawCheck() {
     for (size_t y = 0; y < (_height - 1); y++) {
         for (size_t x = 0; x < _width; x++) {
             if (is_color_pixel)
-                _fireCells[y * _width + x] = (_paletteSize - 1);
+                _fireCells[y * _width + x] = (_palette_size - 1);
             else
                 _fireCells[y * _width + x] = color_index;
 
@@ -152,7 +148,7 @@ void DoomFire::drawCheck() {
 
         // Every 8th flip colour
         if (!(y % 8)) {
-            color_index = ++color_index % _paletteSize;
+            color_index = ++color_index % _palette_size;
             is_color_pixel = !is_color_pixel;
         }
     }
@@ -167,92 +163,11 @@ void DoomFire::resize(size_t w, size_t h) {
     _initFire();
 }
 
-// Performs a lerp on the CLASSIC_PALETTE to give us dynamic color values at a somewhat arbitrary resolution.
-sf::Color DoomFire::_getDynamicColor(const size_t palette_idx) {
+// I have plans to replace with a multi-color gradient palette generator which can generate this or any other
+// color palette of an arbitrary length.
+std::vector<sf::Color> DoomFire::_generatePalette() {
     // If we're using the default palette then we can just look the value.
-    if (_paletteSize == CLASSIC_PALETTE_SIZE)
-        return CLASSIC_PALETTE[palette_idx];
+    if (_palette_size == CLASSIC_PALETTE_SIZE) return _classic_palette;
 
-    // Abort if we're on the edge or outside the bounds of our palette
-    if (palette_idx >= _paletteSize - 1)
-        return CLASSIC_PALETTE[CLASSIC_PALETTE_SIZE - 1];
-
-    // First convert actual index into an index relative to our classic palette
-    double intermediate_scale = (((double) palette_idx / (double) _paletteSize) *
-                                 ((double) CLASSIC_PALETTE_SIZE));
-    // This is our actual size_t index.
-    const size_t scaled_idx = floor(intermediate_scale);
-
-    // We need to  extract this fractional component to feed into our lerp method.
-    double scaled_fraction = intermediate_scale - scaled_idx;
-
-    switch (_colorspace) {
-        case ColorSpace::HSV:
-            return _hsv2color(
-                    ColorUtils::lerpColorHsv(
-                            _hsv_palette[scaled_idx],
-                            _hsv_palette[scaled_idx + 1],
-                            scaled_fraction,
-                            _interpolation_function
-                    )
-            );
-        default:
-        case ColorSpace::RGB:
-            return _rgb2color(
-                    ColorUtils::lerpColorRgb(
-                            _rgb_palette[scaled_idx],
-                            _rgb_palette[scaled_idx + 1],
-                            scaled_fraction,
-                            _interpolation_function
-                    )
-            );
-    }
-}
-
-RgbColor DoomFire::_color2rgb(const sf::Color &c) {
-    return RgbColor{
-            c.r,
-            c.g,
-            c.b
-    };
-}
-
-sf::Color DoomFire::_rgb2color(const RgbColor &rgb) {
-    return sf::Color{
-            static_cast<sf::Uint8>(rgb.r),
-            static_cast<sf::Uint8>(rgb.g),
-            static_cast<sf::Uint8>(rgb.b),
-    };
-}
-
-HsvColor DoomFire::_color2hsv(const sf::Color &c) {
-    auto rgb = _color2rgb(c);
-
-    return ColorUtils::rgb2hsv(rgb);
-}
-
-sf::Color DoomFire::_hsv2color(const HsvColor &hsv) {
-    auto rgb = ColorUtils::hsv2rgb(hsv);
-
-    return _rgb2color(rgb);
-}
-
-HsvColor *DoomFire::_generateHsvPalette() {
-    auto *hsv_palette = new HsvColor[_paletteSize];
-
-    for (size_t i = 0; i < _paletteSize; i++) {
-        hsv_palette[i] = _color2hsv(CLASSIC_PALETTE[i]);
-    }
-
-    return hsv_palette;
-}
-
-RgbColor *DoomFire::_generateRgbPalette() {
-    auto *rgb_palette = new RgbColor[_paletteSize];
-
-    for (size_t i = 0; i < _paletteSize; i++) {
-        rgb_palette[i] = _color2rgb(CLASSIC_PALETTE[i]);
-    }
-
-    return rgb_palette;
+    return ColorUtils::expandPalette(_classic_palette, _palette_size, _interpolation_function);
 }

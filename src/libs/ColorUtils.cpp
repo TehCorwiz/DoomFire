@@ -4,114 +4,51 @@
 
 #include <cmath>
 #include "ColorUtils.h"
+#include "DefaultValues.h"
 
-HsvColor ColorUtils::rgb2hsv(RgbColor rgb) {
-    HsvColor hsv;
-    unsigned char rgbMin, rgbMax;
-
-    rgbMin = rgb.r < rgb.g ? (rgb.r < rgb.b ? rgb.r : rgb.b) : (rgb.g < rgb.b ? rgb.g : rgb.b);
-    rgbMax = rgb.r > rgb.g ? (rgb.r > rgb.b ? rgb.r : rgb.b) : (rgb.g > rgb.b ? rgb.g : rgb.b);
-
-    hsv.v = rgbMax;
-    if (hsv.v == 0) {
-        hsv.h = 0;
-        hsv.s = 0;
-        return hsv;
-    }
-
-    hsv.s = 255 * long(rgbMax - rgbMin) / hsv.v;
-    if (hsv.s == 0) {
-        hsv.h = 0;
-        return hsv;
-    }
-
-    if (rgbMax == rgb.r)
-        hsv.h = 0 + 43 * (rgb.g - rgb.b) / (rgbMax - rgbMin);
-    else if (rgbMax == rgb.g)
-        hsv.h = 85 + 43 * (rgb.b - rgb.r) / (rgbMax - rgbMin);
-    else
-        hsv.h = 171 + 43 * (rgb.r - rgb.g) / (rgbMax - rgbMin);
-
-    return hsv;
-}
-
-RgbColor ColorUtils::hsv2rgb(HsvColor hsv) {
-    RgbColor rgb;
-
-    unsigned char region, remainder, p, q, t;
-
-    if (hsv.s == 0) {
-        rgb.r = hsv.v;
-        rgb.g = hsv.v;
-        rgb.b = hsv.v;
-        return rgb;
-    }
-
-    region = hsv.h / 43;
-    remainder = (hsv.h - (region * 43)) * 6;
-
-    p = (hsv.v * (255 - hsv.s)) >> (uint) 8;
-    q = (hsv.v * (255 - ((hsv.s * remainder) >> (uint) 8))) >> (uint) 8;
-    t = (hsv.v * (255 - ((hsv.s * (255 - remainder)) >> (uint) 8))) >> (uint) 8;
-
-    switch (region) {
-        case 0:
-            rgb.r = hsv.v;
-            rgb.g = t;
-            rgb.b = p;
-            break;
-        case 1:
-            rgb.r = q;
-            rgb.g = hsv.v;
-            rgb.b = p;
-            break;
-        case 2:
-            rgb.r = p;
-            rgb.g = hsv.v;
-            rgb.b = t;
-            break;
-        case 3:
-            rgb.r = p;
-            rgb.g = q;
-            rgb.b = hsv.v;
-            break;
-        case 4:
-            rgb.r = t;
-            rgb.g = p;
-            rgb.b = hsv.v;
-            break;
-        default:
-            rgb.r = hsv.v;
-            rgb.g = p;
-            rgb.b = q;
-            break;
-    }
-
-    return rgb;
-}
-
-HsvColor ColorUtils::lerpColorHsv(HsvColor c0, HsvColor c1, const double t, size_t (*f_pointer)(double, double, double)) {
+sf::Color ColorUtils::lerpColorRgb(sf::Color c0, sf::Color c1,
+                                   const double t,
+                                   size_t (*f_pointer)(double, double, double)) {
     if (t == 0) return c0;
     else if (t == 1) return c1;
 
-    auto out = HsvColor{
-            f_pointer(c0.h, c1.h, t),
-            f_pointer(c0.s, c1.s, t),
-            f_pointer(c0.v, c1.v, t)
+    auto out = sf::Color{
+            static_cast<sf::Uint8>(f_pointer(c0.r, c1.r, t)),
+            static_cast<sf::Uint8>(f_pointer(c0.g, c1.g, t)),
+            static_cast<sf::Uint8>(f_pointer(c0.b, c1.b, t))
     };
 
     return out;
 }
 
-RgbColor ColorUtils::lerpColorRgb(RgbColor c0, RgbColor c1, const double t, size_t (*f_pointer)(double, double, double)) {
-    if (t == 0) return c0;
-    else if (t == 1) return c1;
+std::vector<sf::Color> ColorUtils::expandPalette(const std::vector<sf::Color> &old_palette, size_t new_length,
+                                                 size_t (*_interpolation_function)(double, double, double)) {
+    std::vector<sf::Color> new_palette;
 
-    auto out = RgbColor{
-            f_pointer(c0.r, c1.r, t),
-            f_pointer(c0.g, c1.g, t),
-            f_pointer(c0.b, c1.b, t)
-    };
+    double step_size = (double) old_palette.size() / new_length;
+    double step = 0;
 
-    return out;
+    while (step < new_length - 1) {
+        // First convert actual index into an index relative to our classic palette
+        auto intermediate_scale = (step / new_length) * old_palette.size();
+
+        // This is the current index of the old_palette.
+        const size_t scaled_idx = floor(intermediate_scale);
+
+        // This can be viewed as:
+        //      How far away from the first value towards the second value we are expressed as a percentage.
+        auto scaled_fraction = intermediate_scale - scaled_idx;
+
+        new_palette.push_back(
+                lerpColorRgb(
+                        old_palette[scaled_idx],
+                        old_palette[scaled_idx + 1],
+                        scaled_fraction,
+                        _interpolation_function
+                )
+        );
+        step += step_size;
+    }
+
+    return new_palette;
 }

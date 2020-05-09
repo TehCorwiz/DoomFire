@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include <cstdio>
+#include <vector>
 
 /* Simulation constants */
 
@@ -24,7 +25,8 @@ constexpr static size_t DEFAULT_WIDTH = (size_t) (DEFAULT_HEIGHT * (16.0 / 9.0))
 // PALETTE_SIZE: In order for the fire to fit on screen we need to constrain he palette size to 1/4 of the height.
 // Otherwise the fire will run off the top of the screen. In some situations that may be useful,
 // but by default it's not.
-constexpr static size_t DEFAULT_PALETTE_SIZE = DEFAULT_HEIGHT / 4;
+const static size_t CLASSIC_PALETTE_SIZE = 38;
+constexpr static size_t DEFAULT_PALETTE_SIZE = 60;
 
 // TARGET_TICK_RATE: This is our target FPS (more or less) down the road I may split ticks from frames and run the sim
 // at either a higher or lower tick rate, but keep FPS locked to some common value, 30 or 60).

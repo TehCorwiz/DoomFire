@@ -57,12 +57,16 @@ int main(int argc, char **argv) {
     sf::Texture fire_texture; // Constructs Texture onto which we can draw our Image.
     sf::RectangleShape screen_rect; // Constructs a rectangle which takes our texture and can be draw to our window.
 
+    // Mess with palette sizes
+    if (params.palette_size == 0) {
+        params.palette_size = (DEFAULT_PALETTE_SIZE + params.height) / 5;
+    }
+
     // Initialize the fire sim
     DoomFire doom_fire(
             params.width,
             params.height,
             params.palette_size,
-            params.colorspace,
             params.interpolation_function
     ); // Custom virtual palette size
 

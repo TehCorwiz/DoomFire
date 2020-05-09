@@ -6,13 +6,9 @@
 #define DOOMFIRE_COLORUTILS_H
 
 #include <memory>
+#include <vector>
 
-namespace ColorSpace {
-    enum ColorSpace {
-        RGB,
-        HSV
-    };
-}
+#include <SFML/Graphics/Color.hpp>
 
 namespace InterpolationFunction {
     enum InterpolationFunction {
@@ -21,29 +17,13 @@ namespace InterpolationFunction {
     };
 }
 
-
-typedef struct {
-    size_t h;       // angle in degrees
-    size_t s;       // a fraction between 0 and 1
-    size_t v;       // a fraction between 0 and 1
-} HsvColor;
-
-typedef struct {
-    size_t r;
-    size_t g;
-    size_t b;
-} RgbColor;
-
 class ColorUtils {
 
 public:
-    static HsvColor rgb2hsv(RgbColor);
+    static sf::Color lerpColorRgb(sf::Color c0, sf::Color c1, double t, size_t (*)(double, double, double));
 
-    static HsvColor lerpColorHsv(HsvColor c0, HsvColor c1, double t, size_t (*f_pointer)(double, double, double));
-
-    static RgbColor hsv2rgb(HsvColor);
-
-    static RgbColor lerpColorRgb(RgbColor c0, RgbColor c1, double t, size_t (*f_pointer)(double, double, double));
+    static std::vector<sf::Color> expandPalette(const std::vector<sf::Color> &, size_t new_length,
+                                                size_t (*)(double, double, double));
 };
 
 

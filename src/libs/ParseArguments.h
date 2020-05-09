@@ -14,16 +14,10 @@ struct parameters {
     size_t height = 0;
     size_t width = 0;
     size_t palette_size = 0;
-    ColorSpace::ColorSpace colorspace = ColorSpace::RGB;
     InterpolationFunction::InterpolationFunction interpolation_function = InterpolationFunction::Linear;
     args::Error *error = nullptr;
     std::string error_message = "";
 };
-
-static auto parseColorSpace(const std::string &colorspace) {
-    if (colorspace == "HSV") return ColorSpace::HSV;
-    return ColorSpace::RGB;
-}
 
 static auto parseInterpolationFunction(const std::string &interpolation_function) {
     if (interpolation_function == "Cosine") return InterpolationFunction::Cosine;
@@ -59,7 +53,7 @@ static parameters parseArguments(int argc, char **argv) {
             parser,
             "palette_size",
             "Size of simulation's palette",
-            {'p', "palette_size"}, DEFAULT_PALETTE_SIZE);
+            {'p', "palette_size"}, 0);
     args::ValueFlag<std::string> colorspace(
             parser,
             "colorspace",
@@ -79,7 +73,6 @@ static parameters parseArguments(int argc, char **argv) {
         params.width = width.Get();
         params.palette_size = palette_size.Get();
 
-        params.colorspace = parseColorSpace(colorspace.Get());
         params.interpolation_function = parseInterpolationFunction(interpolation_function.Get());
 
     }
