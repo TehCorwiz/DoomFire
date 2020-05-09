@@ -8,21 +8,26 @@
 #include <args.hxx>
 
 #include "DefaultValues.h"
-#include "ColorUtils.h"
 
 struct parameters {
     size_t height = 0;
     size_t width = 0;
+
     size_t palette_size = 0;
+
     bool capped = false;
-    InterpolationFunction::InterpolationFunction interpolation_function = InterpolationFunction::Linear;
+
+    InterpolationFunction::InterpolationFunction interpolation_function = DEFAULT_INTERPOLATION_FUNCTION;
+
     args::Error *error = nullptr;
     std::string error_message = "";
 };
 
 static auto parseInterpolationFunction(const std::string &interpolation_function) {
     if (interpolation_function == "Cosine") return InterpolationFunction::Cosine;
-    return InterpolationFunction::Linear;
+    else if (interpolation_function == "Linear") return InterpolationFunction::Linear;
+
+    return DEFAULT_INTERPOLATION_FUNCTION;
 }
 
 static parameters parseArguments(int argc, char **argv) {

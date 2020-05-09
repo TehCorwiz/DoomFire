@@ -6,7 +6,6 @@
 #include <SFML/Graphics/Image.hpp>
 
 #include "DoomFire.h"
-#include "../libs/InterpolationFunctions.h"
 
 // Generates a random number.
 double DoomFire::_rnd() {

@@ -7,15 +7,15 @@
 
 #include <cmath>
 
-double interpolateLinear(const double v1, const double v2, const double mu) {
-    return ceil(v1 * (1 - mu) + v2 * mu);
+namespace InterpolationFunction {
+    enum InterpolationFunction {
+        Linear,
+        Cosine
+    };
 }
 
-double interpolateCosine(const double v1, const double v2, const double mu) {
-    double mu2;
+double interpolateLinear(double v1, double v2, double mu);
 
-    mu2 = (1 - cos(mu * M_PI)) / 2;
-    return ceil(v1 * (1 - mu2) + v2 * mu2);
-}
+double interpolateCosine(double v1, double v2, double mu);
 
 #endif //DOOMFIRE_INTERPOLATIONFUNCTIONS_H

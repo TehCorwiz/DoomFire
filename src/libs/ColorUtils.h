@@ -10,13 +10,6 @@
 
 #include <SFML/Graphics/Color.hpp>
 
-namespace InterpolationFunction {
-    enum InterpolationFunction {
-        Linear,
-        Cosine
-    };
-}
-
 class ColorUtils {
 
 public:

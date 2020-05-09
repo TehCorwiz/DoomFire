@@ -9,6 +9,8 @@
 #include <cstdio>
 #include <vector>
 
+#include "InterpolationFunctions.h"
+
 /* Simulation constants */
 
 // DEFAULT_HEIGHT: The value was chosen due to how the original algo works. CLASSIC_PALETTE_SIZE (defined in DoomFire.h) affects how
@@ -39,5 +41,6 @@ const static size_t SECOND_NS = 1000000;
 const static size_t EVENT_TARGET_TICK_RATE = 10;
 constexpr static size_t EVENT_TICK_NS = SECOND_NS / EVENT_TARGET_TICK_RATE;
 
+const static auto DEFAULT_INTERPOLATION_FUNCTION = InterpolationFunction::Cosine;
 
 #endif //DOOMFIRE_DEFAULTVALUES_H

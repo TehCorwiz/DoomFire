@@ -21,6 +21,7 @@ add_executable(
         src/libs/ColorUtils.h
         src/libs/DefaultValues.h
         src/libs/ParseArguments.h
+        src/libs/InterpolationFunctions.cpp
         src/libs/InterpolationFunctions.h
 )
 
