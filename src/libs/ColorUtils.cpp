@@ -6,9 +6,9 @@
 #include "ColorUtils.h"
 #include "DefaultValues.h"
 
-sf::Color ColorUtils::lerpColorRgb(sf::Color c0, sf::Color c1,
-                                   const double t,
-                                   double (*f_pointer)(double, double, double)) {
+sf::Color ColorUtils::lerpColor(sf::Color c0, sf::Color c1,
+                                const double t,
+                                double (*f_pointer)(double, double, double)) {
     if (t == 0) return c0;
     else if (t == 1) return c1;
 
@@ -39,14 +39,14 @@ std::vector<sf::Color> ColorUtils::expandPalette(const std::vector<sf::Color> &o
         //      How far away from the first value towards the second value we are expressed as a percentage.
         auto scaled_fraction = intermediate_scale - scaled_idx;
 
-        new_palette.push_back(
-                lerpColorRgb(
-                        old_palette[scaled_idx],
-                        old_palette[scaled_idx + 1],
-                        scaled_fraction,
-                        _interpolation_function
-                )
-        );
+        auto c0 = old_palette[scaled_idx];
+
+        // This lookup seems to be causing a wanring in valgrind:
+        //      `Invalid reading of size 4`
+        auto c1 = old_palette[scaled_idx + 1];
+
+        new_palette.push_back(lerpColor(c0, c1, scaled_fraction, _interpolation_function));
+
         step += step_size;
     }
 
