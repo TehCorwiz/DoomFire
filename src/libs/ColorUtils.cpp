@@ -4,9 +4,72 @@
 
 #include <cmath>
 #include "ColorUtils.h"
+#include "DefaultValues.h"
 
-HsvColor ColorUtils::rgb2hsv(RgbColor rgb) {
-    HsvColor hsv;
+sf::Color ColorUtils::lerpColor(sf::Color c0, sf::Color c1,
+                                const double t,
+                                const bool use_hsv,
+                                double (*f_pointer)(double, double, double)) {
+    if (t == 0) return c0;
+    else if (t == 1) return c1;
+
+    if (use_hsv) {
+        auto hsv0 = color2Hsv(c0);
+        auto hsv1 = color2Hsv(c1);
+        auto h = f_pointer(hsv0.h, hsv1.h, t);
+        auto s = f_pointer(hsv0.s, hsv1.s, t);
+        auto v = f_pointer(hsv0.s, hsv1.v, t);
+
+        auto int_hsv = Hsv{h, s, v,};
+
+        return hsv2Color(int_hsv);
+    } else {
+        return sf::Color{
+                static_cast<sf::Uint8>(f_pointer(c0.r, c1.r, t)),
+                static_cast<sf::Uint8>(f_pointer(c0.g, c1.g, t)),
+                static_cast<sf::Uint8>(f_pointer(c0.b, c1.b, t))
+        };
+    }
+}
+
+std::vector<sf::Color> ColorUtils::expandPalette(
+        const std::vector<sf::Color> &old_palette,
+        size_t new_length,
+        bool use_hsv,
+        double (*_interpolation_function)(double, double, double)
+) {
+    std::vector<sf::Color> new_palette;
+
+    double step_size = (double) old_palette.size() / new_length;
+    double step = 0;
+
+    while (step < (double) new_length - 1) {
+        // First convert actual index into an index relative to our classic palette
+        auto intermediate_scale = ((double) step / new_length) * (double) old_palette.size();
+
+        // This is the current index of the old_palette.
+        const size_t scaled_idx = floor(intermediate_scale);
+
+        // This can be viewed as:
+        //      How far away from the first value towards the second value we are expressed as a percentage.
+        auto scaled_fraction = intermediate_scale - scaled_idx;
+
+        auto c0 = old_palette[scaled_idx];
+
+        // This lookup seems to be causing a warning in valgrind:
+        //      `Invalid reading of size 4`
+        auto c1 = old_palette[scaled_idx + 1];
+
+        new_palette.push_back(lerpColor(c0, c1, scaled_fraction, use_hsv, _interpolation_function));
+
+        step += step_size;
+    }
+
+    return new_palette;
+}
+
+ColorUtils::Hsv ColorUtils::color2Hsv(sf::Color rgb) {
+    Hsv hsv;
     unsigned char rgbMin, rgbMax;
 
     rgbMin = rgb.r < rgb.g ? (rgb.r < rgb.b ? rgb.r : rgb.b) : (rgb.g < rgb.b ? rgb.g : rgb.b);
@@ -35,10 +98,10 @@ HsvColor ColorUtils::rgb2hsv(RgbColor rgb) {
     return hsv;
 }
 
-RgbColor ColorUtils::hsv2rgb(HsvColor hsv) {
-    RgbColor rgb;
+sf::Color ColorUtils::hsv2Color(ColorUtils::Hsv hsv) {
+    sf::Color rgb;
 
-    unsigned char region, remainder, p, q, t;
+    uint64_t region, remainder, p, q, t;
 
     if (hsv.s == 0) {
         rgb.r = hsv.v;
@@ -50,9 +113,9 @@ RgbColor ColorUtils::hsv2rgb(HsvColor hsv) {
     region = hsv.h / 43;
     remainder = (hsv.h - (region * 43)) * 6;
 
-    p = (hsv.v * (255 - hsv.s)) >> (uint) 8;
-    q = (hsv.v * (255 - ((hsv.s * remainder) >> (uint) 8))) >> (uint) 8;
-    t = (hsv.v * (255 - ((hsv.s * (255 - remainder)) >> (uint) 8))) >> (uint) 8;
+    p = (uint) (hsv.v * (255 - hsv.s)) >> (uint) 8;
+    q = (uint) (hsv.v * (255 - ((uint) (hsv.s * remainder) >> (uint) 8))) >> (uint) 8;
+    t = (uint) (hsv.v * (255 - (((uint) hsv.s * (255 - remainder)) >> (uint) 8))) >> (uint) 8;
 
     switch (region) {
         case 0:
@@ -90,65 +153,3 @@ RgbColor ColorUtils::hsv2rgb(HsvColor hsv) {
     return rgb;
 }
 
-size_t interpolateLinear(const double v1, const double v2, const double mu) {
-    return ceil(v1 * (1 - mu) + v2 * mu);
-}
-
-size_t interpolateCosine(const double y1, const double y2, const double mu) {
-    double mu2;
-
-    mu2 = (1 - cos(mu * M_PI)) / 2;
-    return ceil(y1 * (1 - mu2) + y2 * mu2);
-}
-
-HsvColor ColorUtils::lerpColorHsv(HsvColor c0, HsvColor c1, const double t,
-                                  const InterpolationFunction::InterpolationFunction func = InterpolationFunction::Linear) {
-    if (t == 0) return c0;
-    else if (t == 1) return c1;
-
-    size_t (*f_pointer)(double, double, double);
-
-    switch (func) {
-        case InterpolationFunction::Cosine:
-            f_pointer = interpolateCosine;
-            break;
-        default:
-        case InterpolationFunction::Linear:
-            f_pointer = interpolateLinear;
-            break;
-    }
-
-    auto out = HsvColor{
-            f_pointer(c0.h, c1.h, t),
-            f_pointer(c0.s, c1.s, t),
-            f_pointer(c0.v, c1.v, t)
-    };
-
-    return out;
-}
-
-RgbColor ColorUtils::lerpColorRgb(RgbColor c0, RgbColor c1, const double t,
-                                  InterpolationFunction::InterpolationFunction func = InterpolationFunction::Linear) {
-    if (t == 0) return c0;
-    else if (t == 1) return c1;
-
-    size_t (*f_pointer)(double, double, double);
-
-    switch (func) {
-        case InterpolationFunction::Cosine:
-            f_pointer = interpolateCosine;
-            break;
-        default:
-        case InterpolationFunction::Linear:
-            f_pointer = interpolateLinear;
-            break;
-    }
-
-    auto out = RgbColor{
-            f_pointer(c0.r, c1.r, t),
-            f_pointer(c0.g, c1.g, t),
-            f_pointer(c0.b, c1.b, t)
-    };
-
-    return out;
-}

@@ -2,12 +2,19 @@
 
 ## Purpose
 
-This repo is my attempt to re-implement the fire effect from Doom PSX (and N64). This follows Fabien Sanglard's article [How Doom Fire Was Done](http://fabiensanglard.net/doom_fire_psx/index.html).
+ - Look cool
+ - Look mostly like the fire effect from Doom PSX (and N64).
+   - This mostly started off following Fabien Sanglard's article [How Doom Fire Was Done](http://fabiensanglard.net/doom_fire_psx/index.html).
+   - I've taken liberties however.
+ - Be educational to me
+ - Be easy to read
+ - To grow
 
-CMake is set to use the C++14 spec, although it doesn't depend on that version, c++11 would work just as well, possibly '99.
+## Dependencies
 
-The project depends on:
-- [SFML](https://www.sfml-dev.org) which is available in the Ubuntu and Fedora package repositories.
+I mostly develop on Linux without much consideration for other platforms. Please let me know if there are issues or notes that would make developing this application on Windows or Mac easier.
+
+- DoomFire depends on features found in the `C++14` spec.
+  - Some minor changes could probably bring that down to 11.
 - [args.hxx](https://github.com/Taywee/args)
- 
-My ultimate goal is to annotate each code block with in-depth explanations as both a learning and teaching tool. 
+- [SFML](https://www.sfml-dev.org)

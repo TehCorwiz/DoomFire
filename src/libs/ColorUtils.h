@@ -6,44 +6,38 @@
 #define DOOMFIRE_COLORUTILS_H
 
 #include <memory>
+#include <vector>
 
-namespace ColorSpace {
-    enum ColorSpace {
-        RGB,
-        HSV
-    };
-}
-
-namespace InterpolationFunction {
-    enum InterpolationFunction {
-        Linear,
-        Cosine
-    };
-}
-
-
-typedef struct {
-    size_t h;       // angle in degrees
-    size_t s;       // a fraction between 0 and 1
-    size_t v;       // a fraction between 0 and 1
-} HsvColor;
-
-typedef struct {
-    size_t r;
-    size_t g;
-    size_t b;
-} RgbColor;
+#include <SFML/Graphics/Color.hpp>
 
 class ColorUtils {
 
 public:
-    static HsvColor rgb2hsv(RgbColor);
+    static sf::Color lerpColor(
+            sf::Color c0,
+            sf::Color c1,
+            double t,
+            bool use_hsv,
+            double (*f_pointer)(double, double, double)
+    );
 
-    static RgbColor hsv2rgb(HsvColor);
+    static std::vector<sf::Color> expandPalette(
+            const std::vector<sf::Color> &,
+            size_t,
+            bool,
+            double (*)(double, double, double)
+    );
 
-    static HsvColor lerpColorHsv(HsvColor, HsvColor, double, InterpolationFunction::InterpolationFunction);
+private:
+    struct Hsv {
+        double h{};
+        double s{};
+        double v{};
+    };
 
-    static RgbColor lerpColorRgb(RgbColor, RgbColor, double, InterpolationFunction::InterpolationFunction);
+    static Hsv color2Hsv(sf::Color color);
+
+    static sf::Color hsv2Color(Hsv hsv);
 };
 
 
