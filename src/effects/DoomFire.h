@@ -39,7 +39,6 @@ public:
 private:
     size_t _width;
     size_t _height;
-    size_t _fire_size;
     size_t _palette_size;
     bool _use_hsv;
     std::vector<sf::Color> _classic_palette;
@@ -47,7 +46,7 @@ private:
 
     double (*_interpolation_function)(double, double, double);
 
-    std::vector<size_t> _fireCells;
+    std::vector<std::vector<size_t>> _fireCells;
 
     void _initFire();
 
