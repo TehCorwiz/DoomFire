@@ -21,11 +21,11 @@ public:
             double (*f_pointer)(double, double, double)
     );
 
-    static std::vector<sf::Color> expandPalette(
-            const std::vector<sf::Color> &,
-            size_t,
-            bool,
-            double (*)(double, double, double)
+    static std::vector<sf::Color> resamplePalette(
+            const std::vector<sf::Color> &old_palette,
+            size_t new_length,
+            bool use_hsv,
+            double (*_interpolation_function)(double, double, double)
     );
 
 private:

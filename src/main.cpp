@@ -24,8 +24,7 @@ void drawFire(DoomFire &fire, sf::Image &img, sf::Texture &tex, sf::RectangleSha
 }
 
 // Initializes our size dependent objects.
-void
-init_drawing(const size_t w, const size_t h, DoomFire &df, sf::Image &img, sf::Texture &tex, sf::RectangleShape &rect) {
+void init_drawing(const size_t w, const size_t h, sf::Image &img, sf::Texture &tex, sf::RectangleShape &rect) {
     //df.resize(w, h); // We resize our simulation. This resets our pixel data.
 
     // On first call fire_image and fire_texture are uninitialized objects and must be created.
@@ -80,7 +79,7 @@ int main(int argc, char **argv) {
     sf::RenderWindow window(sf::VideoMode(params.width, params.height), "DoomFire");
 
     // Initializes our drawing surfaces and simulation
-    init_drawing(params.width, params.height, doom_fire, fire_image, fire_texture, screen_rect);
+    init_drawing(params.width, params.height, fire_image, fire_texture, screen_rect);
 
     clock_t last_event_tick_at = clock(); // We store the last time a tick occurred so we can calculate the tick time.
     clock_t last_tick_at = clock(); // We store the last time a tick occurred so we can calculate the tick time.

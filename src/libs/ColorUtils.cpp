@@ -32,7 +32,7 @@ sf::Color ColorUtils::lerpColor(sf::Color c0, sf::Color c1,
     }
 }
 
-std::vector<sf::Color> ColorUtils::expandPalette(
+std::vector<sf::Color> ColorUtils::resamplePalette(
         const std::vector<sf::Color> &old_palette,
         size_t new_length,
         bool use_hsv,

@@ -142,7 +142,7 @@ void DoomFire::doFire() {
 // This was used earlier in development for testing various things.
 void DoomFire::drawCheck() {
     bool is_color_pixel = false;
-    size_t color_index = 0;
+    auto color_index = 0;
 
     for (size_t col_idx = 0; col_idx < _width; col_idx++) {
         for (size_t row_idx = 0; row_idx < (_height - 1); row_idx++) {
@@ -153,7 +153,8 @@ void DoomFire::drawCheck() {
 
             // Every 8th flip colour
             if (!(row_idx % 8)) {
-                color_index = ++color_index % _palette_size;
+                ++color_index;
+                color_index = color_index % _palette_size;
                 is_color_pixel = !is_color_pixel;
             }
 
@@ -178,5 +179,5 @@ void DoomFire::resize(size_t w, size_t h) {
 std::vector<sf::Color> DoomFire::_generatePalette() {
     if (_palette_size == CLASSIC_PALETTE_SIZE) return _classic_palette;
 
-    return ColorUtils::expandPalette(_classic_palette, _palette_size, _use_hsv, _interpolation_function);
+    return ColorUtils::resamplePalette(_classic_palette, _palette_size, _use_hsv, _interpolation_function);
 }
