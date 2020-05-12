@@ -87,12 +87,12 @@ sf::Image DoomFire::getImage() {
 
 // Parses our vector of cells and produces an image. This variant writes to an existing image by reference.
 void DoomFire::getImage(sf::Image &img) {
-    for (size_t x = 0; x < _width; x++) {
-        for (size_t y = 0; y < _height; y++) {
-            const size_t palette_idx = _fireCells[x][y];
+    for (size_t col_idx = 0; col_idx < _width; col_idx++) {
+        for (size_t row_idx = 0; row_idx < _height; row_idx++) {
+            const size_t palette_idx = _fireCells[col_idx][row_idx];
             const sf::Color pixel_color = _palette[palette_idx];
 
-            img.setPixel(x, y, pixel_color);
+            img.setPixel(col_idx, row_idx, pixel_color);
         }
     }
 }
@@ -100,8 +100,8 @@ void DoomFire::getImage(sf::Image &img) {
 // This simple iterates over our cells and calls our actual update function.
 void DoomFire::doFire() {
     // Starting at horizontal line 1 prevents overwriting the bottom source line of pixels.
-    for (size_t row_idx = 1; row_idx < _height; row_idx++) {
-        for (size_t col_idx = 0; col_idx < _width; col_idx++) {
+    for (size_t col_idx = 0; col_idx < _width; col_idx++) {
+        for (size_t row_idx = 1; row_idx < _height; row_idx++) {
             // src_idx: this is the location of the current cell in _fireCells
             const size_t palette_idx = _fireCells[col_idx][row_idx]; // palette_idx: the actual color value of the src palette_idx.
 
@@ -119,15 +119,20 @@ void DoomFire::doFire() {
                 const size_t distance = (size_t) floor(_rnd() * 3.0) & (uint) 3;
 
                 // We then use this random index to offset our destination value.
-                auto new_col_idx = col_idx > distance ? col_idx - distance : col_idx + 1;
+                // auto new_col_idx = col_idx; // Vertical
+                // auto new_col_idx = (col_idx + 1) % _width; // Diagonal lines. Very cool.
+                auto new_col_idx = (col_idx - distance + 1) % _width; // Classic-ish
 
                 // We move up one row
-                const size_t new_row_idx = row_idx - 1;
+                const size_t one_row_down = (row_idx - 1) % _height;
 
-                const size_t new_palette_idx = palette_idx - (distance & (size_t) 1);
+                size_t new_palette_idx = palette_idx;
+                if ((distance & (size_t) 1) > 0) {
+                    new_palette_idx = (palette_idx - 1) % _palette_size;
+                }
 
                 // Finally we set the palette_idx value to either 1 less than the current color, or the current color.
-                _fireCells[new_col_idx][new_row_idx] = new_palette_idx;
+                _fireCells[new_col_idx][one_row_down] = new_palette_idx;
             }
         }
     }
@@ -139,23 +144,23 @@ void DoomFire::drawCheck() {
     bool is_color_pixel = false;
     size_t color_index = 0;
 
-    for (size_t y = 0; y < (_height - 1); y++) {
-        for (size_t x = 0; x < _width; x++) {
-            if (is_color_pixel)
-                _fireCells[x][y] = (_palette_size - 1);
-            else
-                _fireCells[x][y] = color_index;
-
+    for (size_t col_idx = 0; col_idx < _width; col_idx++) {
+        for (size_t row_idx = 0; row_idx < (_height - 1); row_idx++) {
             // Every 8th flip colour
-            if (!(x % 8)) {
+            if (!(col_idx % 8)) {
                 is_color_pixel = !is_color_pixel;
             }
-        }
 
-        // Every 8th flip colour
-        if (!(y % 8)) {
-            color_index = ++color_index % _palette_size;
-            is_color_pixel = !is_color_pixel;
+            // Every 8th flip colour
+            if (!(row_idx % 8)) {
+                color_index = ++color_index % _palette_size;
+                is_color_pixel = !is_color_pixel;
+            }
+
+            if (is_color_pixel)
+                _fireCells[col_idx][row_idx] = (_palette_size - 1);
+            else
+                _fireCells[col_idx][row_idx] = color_index;
         }
     }
 }

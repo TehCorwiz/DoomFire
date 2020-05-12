@@ -152,4 +152,3 @@ sf::Color ColorUtils::hsv2Color(ColorUtils::Hsv hsv) {
 
     return rgb;
 }
-

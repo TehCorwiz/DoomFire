@@ -28,7 +28,7 @@ constexpr static size_t DEFAULT_WIDTH = (size_t) (DEFAULT_HEIGHT * (16.0 / 9.0))
 // Otherwise the fire will run off the top of the screen. In some situations that may be useful,
 // but by default it's not.
 const static size_t CLASSIC_PALETTE_SIZE = 38;
-constexpr static size_t DEFAULT_PALETTE_SIZE = 60;
+constexpr static size_t DEFAULT_PALETTE_SIZE = CLASSIC_PALETTE_SIZE;
 
 // DEFAULT_TARGET_TICK_RATE: This is our target FPS (more or less) down the road I may split ticks from frames and run the sim
 // at either a higher or lower tick rate, but keep FPS locked to some common value, 30 or 60).
