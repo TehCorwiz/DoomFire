@@ -34,18 +34,18 @@ sf::Color ColorUtils::lerpColor(sf::Color c0, sf::Color c1,
 
 std::vector<sf::Color> ColorUtils::resamplePalette(
         const std::vector<sf::Color> &old_palette,
-        size_t new_length,
+        double new_palette_size,
         bool use_hsv,
         double (*_interpolation_function)(double, double, double)
 ) {
     std::vector<sf::Color> new_palette;
 
-    double step_size = (double) old_palette.size() / new_length;
     double step = 0;
+    double step_size = old_palette.size() / new_palette_size;
 
-    while (step < (double) new_length - 1) {
+    while (step < new_palette_size - 1) {
         // First convert actual index into an index relative to our classic palette
-        auto intermediate_scale = ((double) step / new_length) * (double) old_palette.size();
+        auto intermediate_scale = (step / new_palette_size) * old_palette.size();
 
         // This is the current index of the old_palette.
         const size_t scaled_idx = floor(intermediate_scale);

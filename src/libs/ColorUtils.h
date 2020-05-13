@@ -23,7 +23,7 @@ public:
 
     static std::vector<sf::Color> resamplePalette(
             const std::vector<sf::Color> &old_palette,
-            size_t new_length,
+            double new_palette_size,
             bool use_hsv,
             double (*_interpolation_function)(double, double, double)
     );
