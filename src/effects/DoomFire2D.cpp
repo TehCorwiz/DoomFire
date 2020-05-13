@@ -124,7 +124,10 @@ void DoomFire2D::doFire() {
                 auto new_col_idx = (col_idx - distance + 1) % _width; // Classic-ish
 
                 // We move up one row
-                const size_t one_row_down = (row_idx - 1) % _height;
+                size_t new_row_idx = (row_idx - 1) % _height;
+                if (distance > col_idx) { ;
+                    new_row_idx--;
+                }
 
                 size_t new_palette_idx = palette_idx;
                 if ((distance & (size_t) 1) > 0) {
@@ -132,7 +135,7 @@ void DoomFire2D::doFire() {
                 }
 
                 // Finally we set the palette_idx value to either 1 less than the current color, or the current color.
-                _fireCells[new_col_idx][one_row_down] = new_palette_idx;
+                _fireCells[new_col_idx][new_row_idx] = new_palette_idx;
             }
         }
     }
