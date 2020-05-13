@@ -4,7 +4,7 @@
 
 #include "main.h"
 #include "libs/ParseArguments.h"
-#include "effects/DoomFire.h"
+#include "effects/DoomFire2D.h"
 
 // Handles window events. SFML handles events internally, and asynchronously. Events will accumulate until pollEvent is
 // called which will load the next event into our `event` object which we can use to handle events such as resizing the
@@ -17,7 +17,7 @@ void handle_window_events(sf::RenderWindow &window, sf::Event &event) {
 }
 
 // Takes the simulation, retrieves the image data and feeds it through our Image->Texture->RectangleShape pipeline.
-void drawFire(DoomFire &fire, sf::Image &img, sf::Texture &tex, sf::RectangleShape &rect) {
+void drawFire(DoomFire2D &fire, sf::Image &img, sf::Texture &tex, sf::RectangleShape &rect) {
     fire.getImage(img); // Writes the pixel data directly to the img.
     tex.loadFromImage(img); // Loads image into tex.
     rect.setTexture(&tex); // Applies that texture to the rect.
@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
     const size_t target_tick_ns = SECOND_NS / target_tick_rate;
 
     // Initialize the fire sim
-    DoomFire doom_fire(
+    DoomFire2D doom_fire(
             params.width,
             params.height,
             params.palette_size,

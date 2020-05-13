@@ -2,8 +2,8 @@
 // Created by corwin on 5/1/19.
 //
 
-#ifndef DOOMFIRE_DOOMFIRE_H
-#define DOOMFIRE_DOOMFIRE_H
+#ifndef DOOMFIRE_DOOMFIRE2D_H
+#define DOOMFIRE_DOOMFIRE2D_H
 
 
 #include <random>
@@ -14,9 +14,9 @@
 #include "../libs/ColorUtils.h"
 #include "../libs/DefaultValues.h"
 
-class DoomFire {
+class DoomFire2D {
 public:
-    DoomFire(
+    DoomFire2D(
             size_t w,
             size_t h,
             size_t = CLASSIC_PALETTE_SIZE,
@@ -97,4 +97,4 @@ private:
 };
 
 
-#endif //DOOMFIRE_DOOMFIRE_H
+#endif //DOOMFIRE_DOOMFIRE2D_H

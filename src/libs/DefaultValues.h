@@ -13,7 +13,7 @@
 
 /* Simulation constants */
 
-// DEFAULT_HEIGHT: The value was chosen due to how the original algo works. CLASSIC_PALETTE_SIZE (defined in DoomFire.h) affects how
+// DEFAULT_HEIGHT: The value was chosen due to how the original algo works. CLASSIC_PALETTE_SIZE (defined in DoomFire2D.h) affects how
 // high the flames are drawn. Thus we need a value that isn't too short or too tall. The original value, 168 looks
 // really good with some but not too much vertical space to allow for little `sparks`. However, since the resolution is
 // dependent on the CLASSIC_PALETTE_SIZE in the first place, I'm adopting a calculated value in order to support additional

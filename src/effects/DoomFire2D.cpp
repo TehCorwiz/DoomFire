@@ -5,10 +5,10 @@
 #include <cstdio>
 #include <SFML/Graphics/Image.hpp>
 
-#include "DoomFire.h"
+#include "DoomFire2D.h"
 
 // Generates a random number.
-double DoomFire::_rnd() {
+double DoomFire2D::_rnd() {
     float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
     return (double) r;
 }
@@ -20,7 +20,7 @@ double DoomFire::_rnd() {
 // This method accepts a boolean to determine if we should use a single white line of pixels as our source, or if we
 // should use randomly colored pixels as our source. From there it iterates over the vector and pre-fills it with our
 // starting colors.
-void DoomFire::_initFire() {
+void DoomFire2D::_initFire() {
     _fireCells = std::vector<std::vector<size_t>>(_width);
 
     // Fill vector with defaults
@@ -40,7 +40,7 @@ void DoomFire::_initFire() {
 }
 
 // Our constructor. Stores our parameters and bootstraps our rng and cells.
-DoomFire::DoomFire(
+DoomFire2D::DoomFire2D(
         const size_t w,
         const size_t h,
         const size_t palette_size,
@@ -68,7 +68,7 @@ DoomFire::DoomFire(
 }
 
 // Parses our vector of cells and produces an image. This variant returns a new image.
-sf::Image DoomFire::getImage() {
+sf::Image DoomFire2D::getImage() {
     sf::Image img;
     img.create(_width, _height);
 
@@ -86,7 +86,7 @@ sf::Image DoomFire::getImage() {
 }
 
 // Parses our vector of cells and produces an image. This variant writes to an existing image by reference.
-void DoomFire::getImage(sf::Image &img) {
+void DoomFire2D::getImage(sf::Image &img) {
     for (size_t col_idx = 0; col_idx < _width; col_idx++) {
         for (size_t row_idx = 0; row_idx < _height; row_idx++) {
             const size_t palette_idx = _fireCells[col_idx][row_idx];
@@ -98,7 +98,7 @@ void DoomFire::getImage(sf::Image &img) {
 }
 
 // This simple iterates over our cells and calls our actual update function.
-void DoomFire::doFire() {
+void DoomFire2D::doFire() {
     // Starting at horizontal line 1 prevents overwriting the bottom source line of pixels.
     for (size_t col_idx = 0; col_idx < _width; col_idx++) {
         for (size_t row_idx = 1; row_idx < _height; row_idx++) {
@@ -140,7 +140,7 @@ void DoomFire::doFire() {
 
 // This draws a checkerboard in our color palette gradient.
 // This was used earlier in development for testing various things.
-void DoomFire::drawCheck() {
+void DoomFire2D::drawCheck() {
     bool is_color_pixel = false;
     auto color_index = 0;
 
@@ -167,7 +167,7 @@ void DoomFire::drawCheck() {
 }
 
 // Resizes and re-initializes our simulation.
-void DoomFire::resize(size_t w, size_t h) {
+void DoomFire2D::resize(size_t w, size_t h) {
     _width = w;
     _height = h;
 
@@ -176,7 +176,7 @@ void DoomFire::resize(size_t w, size_t h) {
 
 // I have plans to replace with a multi-color gradient palette generator which can generate this or any other
 // color palette of an arbitrary length.
-std::vector<sf::Color> DoomFire::_generatePalette() {
+std::vector<sf::Color> DoomFire2D::_generatePalette() {
     if (_palette_size == CLASSIC_PALETTE_SIZE) return _classic_palette;
 
     return ColorUtils::resamplePalette(_classic_palette, _palette_size, _use_hsv, _interpolation_function);
