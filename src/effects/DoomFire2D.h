@@ -30,8 +30,6 @@ public:
 
     void doFire();
 
-    void spreadFire(size_t);
-
     void drawCheck();
 
     void resize(size_t, size_t);
