@@ -49,7 +49,7 @@ std::vector<sf::Color> ColorUtils::upsamplePalette(
         if (old_idx == 0) {
             new_palette.push_back(old_palette.front());
             continue;
-        } else if (old_idx == old_palette.size() - 1) {
+        } else if (old_idx == old_palette.size() - 2) {
             new_palette.push_back(old_palette.back());
             continue;
         }
