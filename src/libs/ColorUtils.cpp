@@ -69,9 +69,35 @@ std::vector<sf::Color> ColorUtils::upsamplePalette(
 std::vector<sf::Color>
 ColorUtils::downsamplePalette(
         const std::vector<sf::Color> &old_palette,
-        double new_palette_size, bool use_hsv,
+        double step_count, bool use_hsv,
         double (*_interpolation_function)(double, double, double)) {
-    return std::vector<sf::Color>();
+    std::vector<sf::Color> new_palette;
+
+
+    for (u_long step = 0; step < step_count; step++) {
+        double ratio = step_count / old_palette.size();
+        double sample_point = ratio * step;
+
+        if (sample_point == 0) {
+            new_palette.push_back(old_palette.front());
+            continue;
+        } else if (step == step_count - 1) {
+            new_palette.push_back(old_palette.back());
+            continue;
+        }
+
+        size_t sample_idx = floor(sample_point);
+        double fraction = sample_point - sample_idx;
+
+        auto c0 = old_palette[sample_idx];
+        auto c1 = old_palette[sample_idx + 1];
+
+        auto new_color = lerpColor(c0, c1, fraction, use_hsv, _interpolation_function);
+
+        new_palette.push_back(new_color);
+    }
+
+    return new_palette;
 }
 
 std::vector<sf::Color>
