@@ -121,7 +121,7 @@ void DoomFire2D::doFire() {
                 // We then use this random index to offset our destination value.
                 // auto new_col_idx = col_idx; // Vertical
                 // auto new_col_idx = (col_idx + 1) % _width; // Diagonal lines. Very cool.
-                auto new_col_idx = (col_idx - distance + 1) % _width; // Classic-ish
+                auto new_col_idx = (col_idx + distance - 1) % _width; // Classic-ish
 
                 // We move up one row
                 size_t new_row_idx = (row_idx - 1) % _height;
