@@ -28,6 +28,20 @@ public:
             double (*_interpolation_function)(double, double, double)
     );
 
+    static std::vector<sf::Color> upsamplePalette(
+            const std::vector<sf::Color> &old_palette,
+            double new_palette_size,
+            bool use_hsv,
+            double (*_interpolation_function)(double, double, double)
+    );
+
+    static std::vector<sf::Color> downsamplePalette(
+            const std::vector<sf::Color> &old_palette,
+            double new_palette_size,
+            bool use_hsv,
+            double (*_interpolation_function)(double, double, double)
+    );
+
 private:
     struct Hsv {
         double h{};

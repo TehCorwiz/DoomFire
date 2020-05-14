@@ -32,7 +32,7 @@ sf::Color ColorUtils::lerpColor(sf::Color c0, sf::Color c1,
     }
 }
 
-std::vector<sf::Color> ColorUtils::resamplePalette(
+std::vector<sf::Color> ColorUtils::upsamplePalette(
         const std::vector<sf::Color> &old_palette,
         double new_palette_size,
         bool use_hsv,
@@ -40,32 +40,50 @@ std::vector<sf::Color> ColorUtils::resamplePalette(
 ) {
     std::vector<sf::Color> new_palette;
 
-    double step = 0;
-    double step_size = old_palette.size() / new_palette_size;
+    auto step_count = ceil(new_palette_size / old_palette.size());
 
-    while (step < new_palette_size - 1) {
-        // First convert actual index into an index relative to our classic palette
-        auto intermediate_scale = (step / new_palette_size) * old_palette.size();
+    for (u_long old_idx = 0; old_idx < old_palette.size() - 1; old_idx++) {
+        auto c0 = old_palette[old_idx];
+        auto c1 = old_palette[old_idx + 1];
 
-        // This is the current index of the old_palette.
-        const size_t scaled_idx = floor(intermediate_scale);
+        if (old_idx == 0) {
+            new_palette.push_back(old_palette.front());
+            continue;
+        } else if (old_idx == old_palette.size() - 1) {
+            new_palette.push_back(old_palette.back());
+            continue;
+        }
 
-        // This can be viewed as:
-        //      How far away from the first value towards the second value we are expressed as a percentage.
-        auto scaled_fraction = intermediate_scale - scaled_idx;
+        for (auto c = 0; c <= step_count; c++) { // ;)
+            auto fraction = c / step_count;
 
-        auto c0 = old_palette[scaled_idx];
+            auto new_color = lerpColor(c0, c1, fraction, use_hsv, _interpolation_function);
 
-        // This lookup seems to be causing a warning in valgrind:
-        //      `Invalid reading of size 4`
-        auto c1 = old_palette[scaled_idx + 1];
-
-        new_palette.push_back(lerpColor(c0, c1, scaled_fraction, use_hsv, _interpolation_function));
-
-        step += step_size;
+            new_palette.push_back(new_color);
+        }
     }
 
     return new_palette;
+}
+
+std::vector<sf::Color>
+ColorUtils::downsamplePalette(
+        const std::vector<sf::Color> &old_palette,
+        double new_palette_size, bool use_hsv,
+        double (*_interpolation_function)(double, double, double)) {
+    return std::vector<sf::Color>();
+}
+
+std::vector<sf::Color>
+ColorUtils::resamplePalette(
+        const std::vector<sf::Color> &old_palette,
+        double new_palette_size,
+        bool use_hsv,
+        double (*_interpolation_function)(double, double, double)) {
+    if (old_palette.size() > new_palette_size)
+        return downsamplePalette(old_palette, new_palette_size, use_hsv, _interpolation_function);
+    else
+        return upsamplePalette(old_palette, new_palette_size, use_hsv, _interpolation_function);
 }
 
 ColorUtils::Hsv ColorUtils::color2Hsv(sf::Color rgb) {
