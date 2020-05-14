@@ -18,7 +18,7 @@
 // really good with some but not too much vertical space to allow for little `sparks`. However, since the resolution is
 // dependent on the CLASSIC_PALETTE_SIZE in the first place, I'm adopting a calculated value in order to support additional
 // resolutions down the road.
-constexpr static size_t DEFAULT_HEIGHT = 320;
+constexpr static size_t DEFAULT_HEIGHT = 400;
 
 // DEFAULT_WIDTH: The value uses the above to choose a width that results in a 16:9 ratio which is the current most common
 // screen size.
