@@ -1,5 +1,7 @@
 # DoomFire
 
+![Screenshot](images/screenshot.png)
+
 ## Purpose
 
  - Look cool
