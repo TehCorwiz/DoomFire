@@ -122,7 +122,7 @@ void DoomFire::spreadFire(size_t src_idx) {
         // 2) We multiply that by 3 to get a number between 0.0 and 3.0 inclusive.
         // 3) We floor that value to get an integer.
         // 4) We logically AND that value with 3 which clamps our value.
-        const size_t rnd_idx = (size_t) floor(_rnd() * 3.0) & (uint) 3;
+        const size_t rnd_idx = (size_t) floor(_rnd() * 3.0) & (unsigned int) 3;
         // We then use this random index to offset our destination value. We add 1 here to avoid negative indices.
         const size_t dst = src_idx - rnd_idx + 1;
         // We move up one row

@@ -113,9 +113,9 @@ sf::Color ColorUtils::hsv2Color(ColorUtils::Hsv hsv) {
     region = hsv.h / 43;
     remainder = (hsv.h - (region * 43)) * 6;
 
-    p = (uint) (hsv.v * (255 - hsv.s)) >> (uint) 8;
-    q = (uint) (hsv.v * (255 - ((uint) (hsv.s * remainder) >> (uint) 8))) >> (uint) 8;
-    t = (uint) (hsv.v * (255 - (((uint) hsv.s * (255 - remainder)) >> (uint) 8))) >> (uint) 8;
+    p = (unsigned int) (hsv.v * (255 - hsv.s)) >> (unsigned int) 8;
+    q = (unsigned int) (hsv.v * (255 - ((unsigned int) (hsv.s * remainder) >> (unsigned int) 8))) >> (unsigned int) 8;
+    t = (unsigned int) (hsv.v * (255 - (((unsigned int) hsv.s * (255 - remainder)) >> (unsigned int) 8))) >> (unsigned int) 8;
 
     switch (region) {
         case 0:
