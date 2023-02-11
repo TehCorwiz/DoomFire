@@ -1,4 +1,3 @@
-include(cmake/CPM.cmake)
 cmake_minimum_required(VERSION 3.14)
 project(doomfire)
 
@@ -8,14 +7,18 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif ()
 
+# Optimize it!
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 #set(CMAKE_CXX_FLAGS_RELEASE "-flto")
 
+# External Dependencies
+include(cmake/CPM.cmake)
 CPMAddPackage("gh:Taywee/args#6.4.6")
 CPMAddPackage("gh:SFML/SFML#2.5.1")
 
+# Build it!
 add_executable(
         doomfire
         src/main.cpp
@@ -30,14 +33,16 @@ add_executable(
         src/libs/InterpolationFunctions.h
 )
 
+# Link it!
 target_link_libraries(
         doomfire
         args
-        sfml-graphics
-        sfml-window
         sfml-system
+        sfml-window
+        sfml-graphics
 )
 
+# Collect DLLs on Windows
 if (WIN32)
     add_custom_command(
             TARGET doomfire POST_BUILD
