@@ -16,9 +16,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 CPMAddPackage("gh:Taywee/args#6.4.6")
 CPMAddPackage("gh:SFML/SFML#2.5.1")
 
-set(SFML_STATIC_LIBRARIES TRUE)
-find_package(SFML COMPONENTS window graphics system REQUIRED)
-
 add_executable(
         doomfire
         src/main.cpp
@@ -40,3 +37,12 @@ target_link_libraries(
         sfml-window
         sfml-system
 )
+
+if (WIN32)
+    add_custom_command(
+            TARGET doomfire POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_RUNTIME_DLLS:doomfire> $<TARGET_FILE_DIR:doomfire>
+            COMMAND_EXPAND_LISTS
+    )
+endif ()
