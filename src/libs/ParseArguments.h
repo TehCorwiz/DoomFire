@@ -6,22 +6,22 @@
 #define DOOMFIRE_PARSEARGUMENTS_H
 
 #include <args.hxx>
-
 #include "DefaultValues.h"
 
 struct parameters {
-    size_t height = 0;
-    size_t width = 0;
+    unsigned int height = 0;
+    unsigned int width = 0;
 
-    size_t palette_size = 0;
+    unsigned int palette_size = 0;
 
     bool capped = false;
+    unsigned int fps = 30;
     bool hsv = false;
 
     InterpolationFunction::InterpolationFunction interpolation_function = DEFAULT_INTERPOLATION_FUNCTION;
 
     args::Error *error = nullptr;
-    std::string error_message = "";
+    std::string error_message;
 };
 
 static auto parseInterpolationFunction(const std::string &interpolation_function) {
@@ -43,19 +43,19 @@ static parameters parseArguments(int argc, char **argv) {
     args::CompletionFlag completion(parser, {"complete"});
 
     // Rendering options
-    args::ValueFlag<size_t> height(
+    args::ValueFlag<unsigned int> height(
             parser,
             "height",
             "height of fire simulation in pixels",
             {'g', "height"},
             DEFAULT_HEIGHT);
-    args::ValueFlag<size_t> width(
+    args::ValueFlag<unsigned int> width(
             parser,
             "width",
             "Width of fire simulation in pixels",
             {'w', "width"},
             DEFAULT_WIDTH);
-    args::ValueFlag<size_t> palette_size(
+    args::ValueFlag<unsigned int> palette_size(
             parser,
             "palette_size",
             "Size of simulation's palette",
@@ -70,6 +70,11 @@ static parameters parseArguments(int argc, char **argv) {
             "uncapped",
             "Toggles tick limiting. Takes no arguments.",
             {'u', "uncapped"}, false);
+    args::ValueFlag<unsigned int> fps(
+            parser,
+            "fps",
+            "Sets max FPS. Accepts an integer.",
+            {'f', "fps"}, 30);
     args::Flag hsv(
             parser,
             "hsv",
@@ -82,6 +87,7 @@ static parameters parseArguments(int argc, char **argv) {
         params.width = width.Get();
         params.palette_size = palette_size.Get();
         params.capped = !uncapped.Get();
+        params.fps = fps.Get();
         params.hsv = hsv.Get();
 
         params.interpolation_function = parseInterpolationFunction(interpolation_function.Get());
